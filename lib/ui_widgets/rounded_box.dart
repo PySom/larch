@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lagosarchdiocese/utils/constants.dart';
 
 class RoundedBox extends StatelessWidget {
   final Color colour;
@@ -18,7 +19,7 @@ class RoundedBox extends StatelessWidget {
         margin: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          color: this.colour,
+          color: this.colour ?? kRoundedIconColor,
         ),
       ),
     );

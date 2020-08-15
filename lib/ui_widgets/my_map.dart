@@ -10,7 +10,6 @@ class MyMap extends StatefulWidget {
 
 class _MyAppState extends State<MyMap> {
   GoogleMapController mapController;
-
   //final LatLng _center = const LatLng(45.521563, -122.677433);
   final LatLng center;
   _MyAppState(this.center);
