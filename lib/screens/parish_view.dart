@@ -41,7 +41,7 @@ class BottomItem extends StatelessWidget {
           Expanded(
             child: BackgroundImageContainer(
               hasShadow: true,
-              image: AssetImage('$kImageUrl/laap_church_default.jpg'),
+              image: AssetImage('${kImageUrl}laap_church_default.jpg'),
             ),
           ),
           Expanded(
