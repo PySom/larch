@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
 import 'package:lagosarchdiocese/helpers/network_image_cache.dart';
+import 'package:lagosarchdiocese/helpers/padded_widget.dart';
+import 'package:lagosarchdiocese/screens/main_news.dart';
 import 'package:lagosarchdiocese/ui_widgets/circle_image.dart';
 import 'package:lagosarchdiocese/ui_widgets/list_item.dart';
 import 'package:lagosarchdiocese/ui_widgets/load_web_view.dart';
@@ -22,7 +24,9 @@ class _NewsPageState extends State<NewsPage> {
       listItems.add(Column(
         children: <Widget>[
           ListItem(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushNamed(MainNews.id);
+            },
             child: ListItemSide(
               title: 'Prayers',
               brief: 'Hello all',
@@ -44,58 +48,117 @@ class _NewsPageState extends State<NewsPage> {
       body: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          BackgroundImageContainer(
-            height: 350,
-            image: networkImageCache(),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: <Widget>[
-                NewsContent(
-                  subject:
-                      'Archbishop Alfred Adewale Martins 35th Ordination Anniversery (Press Release)',
-                  content:
-                      'Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl',
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(MainNews.id);
+            },
+            child: News(
+              child: SafeArea(
+                child: Padded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Icon(Icons.arrow_back),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                StackedImages(
-                  urls: [null, null, null],
-                  text: '3 days ago',
-                ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                        child: Effects(
-                      likes: 10,
-                      shares: 10,
-                      comments: 10,
-                    )),
-                    Column(
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {},
-                          child: Icon(
-                            Icons.bookmark,
-                            color: Colors.black,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+              ),
+              subject:
+                  'Archbishop Alfred Adewale Martins 35th Ordination Anniversery (Press Release)',
+              content:
+                  'Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl',
+              stackedImages: [null, null, null],
+              date: '3 days ago',
+              likes: 10,
+              comments: 10,
+              shares: 10,
             ),
           ),
           ..._myListView(context),
         ],
       ),
+    );
+  }
+}
+
+class News extends StatelessWidget {
+  final String image;
+  final String subject;
+  final String content;
+  final Widget child;
+  final List<String> stackedImages;
+  final String date;
+  final int likes;
+  final int comments;
+  final int shares;
+  News(
+      {this.comments,
+      this.likes,
+      this.shares,
+      this.content,
+      this.subject,
+      this.image,
+      this.date,
+      this.child,
+      this.stackedImages});
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        BackgroundImageContainer(
+          height: 350,
+          image: networkImageCache(),
+          child: child,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: <Widget>[
+              NewsContent(
+                subject: subject,
+                content: content,
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              StackedImages(
+                urls: stackedImages,
+                text: date,
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                      child: Effects(
+                    likes: likes,
+                    shares: shares,
+                    comments: comments,
+                  )),
+                  Column(
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {},
+                        child: Icon(
+                          Icons.bookmark,
+                          color: Colors.black,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -125,28 +188,11 @@ class NewsContent extends StatelessWidget {
   }
 }
 
-class LeftSide extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('left'),
-    );
-  }
-}
-
-class RightSide extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('right'),
-    );
-  }
-}
-
 class StackedImages extends StatelessWidget {
   final String text;
   final List<String> urls;
-  const StackedImages({this.urls = const [], this.text});
+  final Widget extra;
+  const StackedImages({this.urls = const [], this.text, this.extra});
 
   List<Widget> _populateImages() {
     List<Widget> images = [];
@@ -166,7 +212,11 @@ class StackedImages extends StatelessWidget {
         ));
         step += step;
       }
+      if (extra != null) {
+        images.add(Positioned(left: step, child: extra));
+      }
     }
+
     return images;
   }
 
@@ -176,15 +226,15 @@ class StackedImages extends StatelessWidget {
       height: 44,
       child: Stack(
         children: [
-          Container(),
           ..._populateImages(),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Text(
-              text,
-              style: TextStyle(fontSize: 12.0),
-            ),
-          )
+          if (text != null)
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Text(
+                text,
+                style: TextStyle(fontSize: 12.0),
+              ),
+            )
         ],
       ),
     );

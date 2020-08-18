@@ -5,7 +5,7 @@ class RoundedBox extends StatelessWidget {
   final Color colour;
   final Function onTap;
   final Widget boxChild;
-  RoundedBox({@required this.colour, this.boxChild, this.onTap, Key key})
+  RoundedBox({this.colour, this.boxChild, this.onTap, Key key})
       : super(key: key);
   @override
   Widget build(BuildContext context) {

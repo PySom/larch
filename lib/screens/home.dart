@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
+import 'package:lagosarchdiocese/screens/deanery.dart';
 import 'package:lagosarchdiocese/screens/events.dart';
 import 'package:lagosarchdiocese/screens/news_page.dart';
 import 'package:lagosarchdiocese/screens/prayer.dart';
+import 'package:lagosarchdiocese/screens/reflections.dart';
+import 'package:lagosarchdiocese/screens/settings.dart';
 import 'package:lagosarchdiocese/ui_widgets/circle_image.dart';
 import '../ui_widgets/drawer_view.dart';
 import '../ui_widgets/rounded_box.dart';
@@ -106,12 +109,18 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       RoundedBox(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(Deanery.id);
+                        },
                         boxChild: RoundedBoxChild(
                           image: "images/church.svg",
                           title: "Deanery",
                         ),
                       ),
                       RoundedBox(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(Reflection.id);
+                        },
                         boxChild: RoundedBoxChild(
                           image: "images/reflection.svg",
                           title: "Reflections",
@@ -141,6 +150,9 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       RoundedBox(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(Settings.id);
+                        },
                         boxChild: RoundedBoxChild(
                           image: "images/settings.svg",
                           title: "Settings",

@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
+import 'package:lagosarchdiocese/helpers/network_image_cache.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
+import 'package:lagosarchdiocese/ui_widgets/load_web_view.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
 
 import 'circle_image.dart';
@@ -95,7 +97,7 @@ class ListSubItem extends StatelessWidget {
                 children: <Widget>[
                   BackgroundImageContainer(
                     height: 140.0,
-                    image: CachedNetworkImageProvider(image),
+                    image: networkImageCache(url: image),
                   ),
                   SizedBox(
                     height: 10.0,
@@ -122,9 +124,8 @@ class ListSubItem extends StatelessWidget {
                   SizedBox(
                     height: 7,
                   ),
-                  Text(
-                    content,
-                    style: kListTextStyle.copyWith(color: kTextColor),
+                  LoadWebView(
+                    data: content,
                   ),
                   SizedBox(
                     height: 7,

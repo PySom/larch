@@ -45,6 +45,13 @@ const TextStyle kLabelTextStyle = TextStyle(
   color: kInActiveColor,
   fontFamily: "Poppins",
 );
+
+const TextStyle kListSubTextStyle = TextStyle(
+  fontSize: 10.0,
+  color: kTextColor,
+  fontFamily: "Poppins",
+);
+
 const TextStyle kButtonTextStyle = TextStyle(color: kPrimaryColor);
 const TextStyle kDrawerItemStyle =
     TextStyle(color: kPrimaryColor, fontSize: 16.0);

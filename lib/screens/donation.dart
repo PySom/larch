@@ -119,21 +119,26 @@ class DonationPage extends StatelessWidget {
                       SizedBox(
                         height: 20.0,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: RaisedButton(
-                          onPressed: () {
-                            // Validate will return true if the form is valid, or false if
-                            // the form is invalid.
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: RaisedButton(
+                              onPressed: () {
+                                // Validate will return true if the form is valid, or false if
+                                // the form is invalid.
 //                                if (_formKey.currentState.validate()) {
 //                                  // Process data.
 //                                }
-                          },
-                          child: Text(
-                            'Submit',
-                            style: kButtonTextStyle,
+                              },
+                              child: Text(
+                                'Submit',
+                                style: kButtonTextStyle,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lagosarchdiocese/utils/constants.dart';
 
 class BackgroundImageContainer extends StatelessWidget {
   final Widget child;
@@ -24,7 +25,7 @@ class BackgroundImageContainer extends StatelessWidget {
     return Container(
       decoration: new BoxDecoration(
         image: new DecorationImage(
-          image: image,
+          image: image ?? AssetImage('$kImageUrl$kDefaultUserImage'),
           fit: BoxFit.cover,
         ),
         boxShadow: hasShadow

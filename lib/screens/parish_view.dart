@@ -77,9 +77,14 @@ class NavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Icon(
-              Icons.arrow_back,
-              color: kTextColor,
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: kTextColor,
+              ),
             ),
             Text(
               'DIRECTION',

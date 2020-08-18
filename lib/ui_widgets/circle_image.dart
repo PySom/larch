@@ -14,7 +14,9 @@ class CircleImage extends StatelessWidget {
       radius: radius,
       backgroundColor: Colors.transparent,
       backgroundImage: url != null
-          ? CachedNetworkImageProvider(url)
+          ? url.startsWith('image')
+              ? AssetImage(url)
+              : CachedNetworkImageProvider(url)
           : AssetImage('$kImageUrl$defaultImage'),
     );
   }
