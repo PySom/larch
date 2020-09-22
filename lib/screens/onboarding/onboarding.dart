@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
 import 'package:lagosarchdiocese/screens/auth/signup.dart';
 import 'package:lagosarchdiocese/screens/home.dart';

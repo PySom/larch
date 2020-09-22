@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lagosarchdiocese/Exceptions/api_failure_exception.dart';
 import 'package:lagosarchdiocese/helpers/auth_layout.dart';
+import 'package:lagosarchdiocese/providers/auth_provider.dart';
 import 'package:lagosarchdiocese/screens/auth/signup.dart';
 import 'package:lagosarchdiocese/ui_widgets/alt_auth_action.dart';
 import 'package:lagosarchdiocese/ui_widgets/loading_button.dart';
@@ -50,17 +52,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 setState(() {
                   _loading = true;
                 });
-//                await Auth.authProvider(context)
-//                    .loginUser(_email, _password)
-//                    .then((_) => setState(() {
-//                          _loading = false;
-//                        }))
-//                    .catchError((error) {
-//                  setState(() {
-//                    _loading = false;
-//                  });
-//                  throw Exception(error);
-//                });
+                FocusManager.instance.primaryFocus.unfocus();
+                await Auth.authProvider(context)
+                    .loginUser(_email, _password)
+                    .then((_) => setState(() {
+                          _loading = false;
+                        }))
+                    .catchError((error) {
+                  setState(() {
+                    _loading = false;
+                  });
+                  throw ApiFailureException(error);
+                });
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     HomePage.id, (Route<dynamic> route) => false);
               }
@@ -75,22 +78,46 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              AltAuthAction(
-                defaultStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
+              Expanded(
+                child: AltAuthAction(
+                  defaultStyle: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w300,
+                  ),
+                  leadingText: 'New? ',
+                  actionText: 'Sign up',
+                  actionStyle: TextStyle(decoration: TextDecoration.underline),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(SignUpScreen.id);
+                  },
                 ),
-                leadingText: 'New? ',
-                actionText: 'Sign up',
-                actionStyle: TextStyle(decoration: TextDecoration.underline),
-                onTap: () {
-                  Navigator.of(context).pushNamed(SignUpScreen.id);
-                },
               ),
+              Expanded(
+                child: HomeAction(),
+              )
             ],
           ),
         )
       ],
+    );
+  }
+}
+
+class HomeAction extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            HomePage.id, (Route<dynamic> route) => false);
+      },
+      child: Text(
+        'Take me in',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w300,
+        ),
+      ),
     );
   }
 }
@@ -109,6 +136,8 @@ class LoginForm extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'Email',
             labelText: 'Email',
+            contentPadding: EdgeInsets.all(7.0),
+            labelStyle: TextStyle(color: Colors.black),
             errorStyle: TextStyle(
               color: Colors.white,
             ),
@@ -133,6 +162,8 @@ class LoginForm extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'Password (Minimum 6 characters)',
             labelText: 'Password',
+            contentPadding: EdgeInsets.all(7.0),
+            labelStyle: TextStyle(color: Colors.black),
             errorStyle: TextStyle(
               color: Colors.white,
             ),

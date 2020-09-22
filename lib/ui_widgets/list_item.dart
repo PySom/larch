@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
 import 'package:lagosarchdiocese/helpers/network_image_cache.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
@@ -18,16 +18,11 @@ class ListItemSide extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          title,
-          style: kListTextStyle,
+        LoadWebView(
+          data: brief,
         ),
         Text(
-          brief,
-          style: kListTextStyle,
-        ),
-        Text(
-          date,
+          date != null ? date.split('T')[0] : '',
           style: kListTextStyle,
         ),
       ],
@@ -53,7 +48,7 @@ class ListItem extends StatelessWidget {
               children: <Widget>[
                 CircleImage(
                   radius: 30,
-                  url: image,
+                  url: image != null ? '$kBaseUrl/$image' : null,
                 ),
                 SizedBox(
                   width: 20.0,

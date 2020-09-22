@@ -13,7 +13,9 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   int _index = DEFAULT;
-  List<dynamic> items = [1, 2, 3, 4, 5, 6, 6, 8, 9, 10];
+  List<dynamic> items = [
+    1,
+  ];
   List<Column> _myListView(BuildContext context) {
     List<Column> listItems = [];
     for (int index = 0; index < items.length; index++) {
@@ -34,17 +36,26 @@ class _EventPageState extends State<EventPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  ListItemSide(
-                    title: 'Prayers',
-                    brief: 'Hello all',
-                    date: 'Joly 30, 2020 : 10:00',
+                  Expanded(
+                    child: ListItemSide(
+                      title: 'Anniversary',
+                      brief: 'Anniversary of The Archbishop',
+                      date: 'September 12, 2020 : 10:00',
+                    ),
                   ),
                   if (index == items.length - 1)
-                    SvgPicture.asset(
-                      '${kImageUrl}alarm-clock.svg',
-                      width: 40.0,
-                      height: 40.0,
-                      color: Colors.black,
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        SvgPicture.asset(
+                          '${kImageUrl}alarm-clock.svg',
+                          width: 40.0,
+                          height: 40.0,
+                          color: Colors.black,
+                        ),
+                      ],
                     ),
                 ],
               ),
@@ -52,12 +63,12 @@ class _EventPageState extends State<EventPage> {
             if (_index == index)
               ListSubItem(
                 color: Colors.white,
-                image:
-                    'https://static01.nyt.com/images/2020/05/31/us/politics/31dc-virus-scotus/merlin_170520402_b9c7ce69-5b2d-4627-8957-1a866d9d9b06-jumbo.jpg?quality=90&auto=webp',
-                title: 'Prayer before meal',
-                subtitle: 'A thanksgiving to God for provision',
+                image: 'https://lagosarchdiocese.org/picfornews/g431.jpg',
+                title: 'Anniversary',
+                subtitle: 'Anniversary of The Archbishop',
                 content:
-                    'Bless us Oh Lord and this your gift which we are about to receive from your bounty through Christ Our Lord, Amen',
+                    'Today is the 8th anniversary of the Installation of Archbishop Alfred Adewale Martins as the 4th Archbishop of Lagos. We thank the good Lord for the graces bestowed upon him in these past seven years as our Chief Shepherd. '
+                    'Join the Mass at 12pm on Lumen Christi, DSTV Channel 350 & online at <a href="www.chrismmasslagos.com">www.chrismmasslagos.com</a>',
               ),
             if (_index != index)
               SizedBox(
@@ -74,7 +85,7 @@ class _EventPageState extends State<EventPage> {
   Widget build(BuildContext context) {
     return StaticLayout(
       color: kListTileColor,
-      title: 'Events',
+      title: 'EVENTS',
       children: <Widget>[
         Expanded(
           child: ListView(

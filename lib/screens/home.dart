@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
+import 'package:lagosarchdiocese/models/user_model.dart';
+import 'package:lagosarchdiocese/providers/auth_provider.dart';
+import 'package:lagosarchdiocese/screens/auth/login.dart';
 import 'package:lagosarchdiocese/screens/deanery.dart';
+import 'package:lagosarchdiocese/screens/donation.dart';
 import 'package:lagosarchdiocese/screens/events.dart';
 import 'package:lagosarchdiocese/screens/news_page.dart';
 import 'package:lagosarchdiocese/screens/prayer.dart';
@@ -20,6 +24,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  User user;
+  @override
+  void initState() {
+    user = Auth.authProvider(context).user;
+    super.initState();
+  }
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String image;
   @override
@@ -56,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleImage(
-                          url: image,
+                          url: user?.image,
                         ),
                       ],
                     ),
@@ -79,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                           width: double.infinity,
                         ),
                         Text(
-                          'Anonymous User',
+                          user?.fullName ?? 'Anonymous User',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22.0,
@@ -133,15 +144,6 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget>[
                       RoundedBox(
                         onTap: () {
-                          Navigator.of(context).pushNamed(PrayerPage.id);
-                        },
-                        boxChild: RoundedBoxChild(
-                          image: "images/pray.svg",
-                          title: "Prayers",
-                        ),
-                      ),
-                      RoundedBox(
-                        onTap: () {
                           Navigator.of(context).pushNamed(EventPage.id);
                         },
                         boxChild: RoundedBoxChild(
@@ -151,7 +153,18 @@ class _HomePageState extends State<HomePage> {
                       ),
                       RoundedBox(
                         onTap: () {
-                          Navigator.of(context).pushNamed(Settings.id);
+                          Navigator.of(context).pushNamed(DonationPage.id);
+                        },
+                        boxChild: RoundedBoxChild(
+                          image: "images/credit_card.svg",
+                          title: "Donations",
+                        ),
+                      ),
+                      RoundedBox(
+                        onTap: () {
+                          Auth.authProvider(context).isSignedIn()
+                              ? Navigator.of(context).pushNamed(Settings.id)
+                              : Navigator.of(context).pushNamed(LoginScreen.id);
                         },
                         boxChild: RoundedBoxChild(
                           image: "images/settings.svg",

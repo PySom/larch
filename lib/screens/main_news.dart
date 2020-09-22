@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
+import 'package:lagosarchdiocese/models/news.dart' as models;
+import 'package:lagosarchdiocese/utils/constants.dart';
 
 import 'news_page.dart';
 
@@ -7,6 +9,7 @@ class MainNews extends StatelessWidget {
   static const String id = 'main_news';
   @override
   Widget build(BuildContext context) {
+    final models.News news = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -27,22 +30,15 @@ class MainNews extends StatelessWidget {
                   ),
                 ),
               ),
-              subject:
-                  'Archbishop Alfred Adewale Martins 35th Ordination Anniversery (Press Release)',
-              content:
-                  'Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.'
-                  ' Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl'
-                  ' Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl'
-                  ' Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl'
-                  ' Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl'
-                  ' Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl'
-                  ' Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl'
-                  ' Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl',
+              image: news.image,
+              subject: news.title,
+              content: news.content,
               stackedImages: [null, null, null],
-              date: '3 days ago',
-              likes: 10,
-              comments: 10,
-              shares: 10,
+              date:
+                  news.datePosted != null ? news.datePosted.split('T')[0] : '',
+              likes: 0,
+              comments: 0,
+              shares: 0,
             ),
           ],
         ),

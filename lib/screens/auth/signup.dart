@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lagosarchdiocese/Exceptions/api_failure_exception.dart';
 import 'package:lagosarchdiocese/helpers/auth_layout.dart';
+import 'package:lagosarchdiocese/providers/auth_provider.dart';
 import 'package:lagosarchdiocese/screens/auth/login.dart';
 import 'package:lagosarchdiocese/ui_widgets/alt_auth_action.dart';
 import 'package:lagosarchdiocese/ui_widgets/loading_button.dart';
@@ -64,17 +66,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 setState(() {
                   _loading = true;
                 });
-//                await Auth.authProvider(context)
-//                    .loginUser(_email, _password)
-//                    .then((_) => setState(() {
-//                          _loading = false;
-//                        }))
-//                    .catchError((error) {
-//                  setState(() {
-//                    _loading = false;
-//                  });
-//                  throw Exception(error);
-//                });
+                FocusManager.instance.primaryFocus.unfocus();
+                await Auth.authProvider(context)
+                    .registerUser(_name, _email, _password)
+                    .then((_) => setState(() {
+                          _loading = false;
+                        }))
+                    .catchError((error) {
+                  setState(() {
+                    _loading = false;
+                  });
+                  throw ApiFailureException(error);
+                });
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     HomePage.id, (Route<dynamic> route) => false);
               }
@@ -86,21 +89,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
             horizontal: 10.0,
             vertical: 14.0,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              AltAuthAction(
-                defaultStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
-                ),
-                leadingText: 'Already have an account? ',
-                actionText: 'Login',
-                actionStyle: TextStyle(decoration: TextDecoration.underline),
-                onTap: () {
-                  Navigator.of(context).pushNamed(LoginScreen.id);
-                },
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  AltAuthAction(
+                    defaultStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                    ),
+                    leadingText: 'Already have an account? ',
+                    actionText: 'Login',
+                    actionStyle:
+                        TextStyle(decoration: TextDecoration.underline),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(LoginScreen.id);
+                    },
+                  ),
+                ],
               ),
+              HomeAction(),
             ],
           ),
         )
@@ -124,6 +133,7 @@ class SignUpForm extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'Email',
             labelText: 'Email',
+            contentPadding: EdgeInsets.all(7.0),
             labelStyle: TextStyle(color: Colors.black),
             errorStyle: TextStyle(
               color: Colors.white,
@@ -148,6 +158,7 @@ class SignUpForm extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'Name',
             labelText: 'Name',
+            contentPadding: EdgeInsets.all(7.0),
             labelStyle: TextStyle(color: Colors.black),
             errorStyle: TextStyle(
               color: Colors.white,
@@ -173,6 +184,7 @@ class SignUpForm extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'Password (Minimum 6 characters)',
             labelText: 'Password',
+            contentPadding: EdgeInsets.all(7.0),
             labelStyle: TextStyle(color: Colors.black),
             errorStyle: TextStyle(
               color: Colors.white,

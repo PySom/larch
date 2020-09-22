@@ -32,7 +32,7 @@ class ParishDetail extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       name,
-                      style: kParishLabelStyle,
+                      style: kLabelHeaderStyle,
                     ),
                     SizedBox(
                       height: 5.0,

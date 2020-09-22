@@ -16,6 +16,7 @@ const EdgeInsets kHomeTopBgPadding =
     EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0);
 
 const Color kListTileColor = Color(0xFFF3F3F3);
+const Color kOffWhite = Color(0xf5f5f5);
 const Color kPrimaryColor = Colors.white;
 const Color kDrawerColor = Color(0xFF002252);
 const Color kAccentColor = Color(0xFF003C8B);
@@ -89,3 +90,29 @@ const TextStyle kLabelUnitStyle = TextStyle(
   fontWeight: FontWeight.w900,
   fontFamily: "Poppins",
 );
+
+//app url
+const String kBaseUrl = 'https://catholicarchlag.org';
+const String kPayUrl = '$kBaseUrl/pay';
+const String kAppAPIUrl = '$kBaseUrl/api';
+
+Map<String, String> _headers(String token) {
+  return {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+    "Authorization": "Bearer $token"
+  };
+}
+
+const kHeaders = _headers;
+
+const String kUserName = 'user';
+const String kAppDataName = 'appData';
+const String kDeanery = 'deanery_hive';
+const String kDonation = 'donation_hive';
+const String kDonor = 'donor_hive';
+const String kNews = 'news_hive';
+const String kOccasion = 'occasion_hive';
+const String kParish = 'parish_hive';
+const String kQuote = 'quote_hive';
+const String kReflection = 'reflection_hive';

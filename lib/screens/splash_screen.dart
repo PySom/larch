@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
+import 'package:lagosarchdiocese/models/app_model.dart';
+import 'package:lagosarchdiocese/models/user_model.dart';
+import 'package:lagosarchdiocese/providers/app_data_provider.dart';
+import 'package:lagosarchdiocese/providers/auth_provider.dart';
+import 'package:lagosarchdiocese/repository/hive_repository.dart';
+import 'package:lagosarchdiocese/screens/home.dart';
 import 'package:lagosarchdiocese/screens/onboarding/onboarding.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
 
@@ -13,6 +18,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
+  HiveRepository _hiveRepository = HiveRepository();
   AnimationController controller;
   Animation animation;
 
@@ -36,15 +42,45 @@ class _SplashScreenState extends State<SplashScreen>
     });
     controller.addListener(() {
       setState(() {});
-      if (controller.value == 1) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil(Onboarding.id, (route) => false);
-      }
     });
     _prepareAppState();
   }
 
-  _prepareAppState() {}
+  _prepareAppState() async {
+    await HiveRepository.openHives([
+      kUserName,
+      kAppDataName,
+    ]);
+    User user;
+    AppModel appModel;
+    try {
+      user = _hiveRepository.get<User>(key: kUserName, name: kUserName);
+      appModel =
+          _hiveRepository.get<AppModel>(key: kAppDataName, name: kAppDataName);
+    } catch (ex) {
+      print(ex);
+    }
+    if (user == null) {
+      if (appModel?.isFirstTime ?? true) {
+        appModel = AppModel(
+            isFirstTime: false,
+            lastRoute: appModel?.lastRoute,
+            token: appModel?.token);
+        AppData.appDataProvider(context).setAppModel(appModel);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Onboarding.id, (Route<dynamic> route) => false);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            HomePage.id, (Route<dynamic> route) => false);
+      }
+    } else {
+      AppData.appDataProvider(context).setAppModel(appModel);
+      Auth.authProvider(context).setUser(user);
+      Auth.authProvider(context).setToken(appModel.token);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          appModel?.lastRoute ?? HomePage.id, (Route<dynamic> route) => false);
+    }
+  }
 
   @override
   void dispose() {
@@ -73,25 +109,7 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 20.0,
               ),
               Text(
-                'Catholic',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                ),
-              ),
-              Text(
-                'Archdiocese',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                ),
-              ),
-              Text(
-                'of Lagos',
+                'Catholic\nArchdiocese\nof Lagos',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,

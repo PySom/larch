@@ -1,20 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:lagosarchdiocese/helpers/background_image_container.dart';
+import 'package:lagosarchdiocese/models/parish.dart';
 import 'package:lagosarchdiocese/ui_widgets/parish_detail.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
 import '../ui_widgets/my_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class ParishViewPage extends StatelessWidget {
+class ParishViewPage extends StatefulWidget {
   static const String id = 'parish_page_screen';
+
+  @override
+  _ParishViewPageState createState() => _ParishViewPageState();
+}
+
+class _ParishViewPageState extends State<ParishViewPage>
+    with SingleTickerProviderStateMixin {
+  bool isPlaying = false;
+  double multiplier = 0.6;
+
+  Animation animation;
+
+  AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
+  }
+
+  _onPressed() {
+    setState(() {
+      isPlaying = !isPlaying;
+      isPlaying ? controller.forward() : controller.reverse();
+      if (isPlaying) {
+        multiplier = 0.1;
+      } else {
+        multiplier = 0.6;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Parish parish = ModalRoute.of(context).settings.arguments;
+    print('parish is $parish');
     return Scaffold(
         body: Stack(
       fit: StackFit.expand,
       children: <Widget>[
         MyMap(
-          center: const LatLng(6.4499, 3.3966),
+          center: LatLng(parish.latitude, parish.longitude),
         ),
         Align(
           alignment: Alignment.topLeft,
@@ -22,7 +65,31 @@ class ParishViewPage extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: BottomItem(),
+          child: Stack(
+            overflow: Overflow.visible,
+            children: [
+              BottomItem(
+                parish: parish,
+                multiplier: multiplier,
+              ),
+              Positioned(
+                top: -16,
+                right: 20,
+                child: GestureDetector(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 20,
+                    child: AnimatedIcon(
+                      color: Colors.black,
+                      icon: AnimatedIcons.close_menu,
+                      progress: controller,
+                    ),
+                  ),
+                  onTap: () => _onPressed(),
+                ),
+              ),
+            ],
+          ),
         )
       ],
     ));
@@ -30,30 +97,33 @@ class ParishViewPage extends StatelessWidget {
 }
 
 class BottomItem extends StatelessWidget {
+  final Parish parish;
+  final double multiplier;
+  const BottomItem({this.multiplier, this.parish});
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * multiplier,
       width: double.infinity,
       color: Colors.white,
       child: Column(
         children: <Widget>[
-          Expanded(
-            child: BackgroundImageContainer(
-              hasShadow: true,
-              image: AssetImage('${kImageUrl}laap_church_default.jpg'),
-            ),
-          ),
+          // Expanded(
+          //   child: BackgroundImageContainer(
+          //     hasShadow: true,
+          //     image: AssetImage('${kImageUrl}laap_church_default.jpg'),
+          //   ),
+          // ),
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
               child: ParishDetail(
-                name: 'St Mary\'s Catholic Church',
-                address: '7 Ire Akari Estate, Ilasamaja',
-                telephone: '08038714611',
-                email: 'nwisuchisom@gmail.com',
-                mass: _loadHTML(),
-                confession: _loadHTML(),
+                name: parish?.name ?? 'St Mary\'s Catholic Church',
+                address: parish?.address ?? '7 Ire Akari Estate, Ilasamaja',
+                telephone: parish?.phone ?? '08038714611',
+                email: parish?.email ?? 'nwisuchisom@gmail.com',
+                mass: parish?.massDetail ?? _loadHTML(),
+                confession: parish?.confessionDetail ?? _loadHTML(),
               ),
             ),
           ),

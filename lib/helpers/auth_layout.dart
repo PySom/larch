@@ -29,11 +29,11 @@ class AuthLayout extends StatelessWidget {
                         ),
                         Text(
                           title,
-                          style:
-                              kLabelHeaderStyle.copyWith(color: Colors.white),
+                          style: kLabelHeaderStyle.copyWith(
+                              color: Colors.white, fontSize: 16.0),
                         ),
                         SizedBox(
-                          height: 70,
+                          height: 120,
                         ),
                         ...children,
                       ],

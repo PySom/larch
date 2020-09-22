@@ -1,10 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
 import 'package:lagosarchdiocese/helpers/network_image_cache.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
 import 'package:lagosarchdiocese/helpers/static_layout.dart';
+import 'package:lagosarchdiocese/models/deanery.dart' as models;
+import 'package:lagosarchdiocese/providers/app_data_provider.dart';
 import 'package:lagosarchdiocese/screens/parish_view.dart';
+import 'package:lagosarchdiocese/ui_widgets/future_helper.dart';
 import 'package:lagosarchdiocese/ui_widgets/nav_bar_filler.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
 
@@ -39,78 +41,16 @@ class Deanery extends StatefulWidget {
 
 class _DeaneryState extends State<Deanery> {
   int pIndexCount = 0;
-  List<DeaneryModel> deaneries = [
-    DeaneryModel(
-      name: 'Apapa',
-      parishes: [
-        ParishModel(
-            name: 'St Mary\'s',
-            address: '7 Unity Street Ago Okota',
-            phone: '08038714611',
-            email: 'nwisuchisom@gmail.com',
-            distance: '20km'),
-        ParishModel(
-            name: 'St Mary\'s',
-            address: '7 Unity Street Ago Okota',
-            phone: '08038714611',
-            email: 'nwisuchisom@gmail.com',
-            distance: '20km'),
-        ParishModel(
-            name: 'St Mary\'s',
-            address: '7 Unity Street Ago Okota',
-            phone: '08038714611',
-            email: 'nwisuchisom@gmail.com',
-            distance: '20km'),
-      ],
-    ),
-    DeaneryModel(
-      name: 'Apapa',
-      parishes: [
-        ParishModel(
-            name: 'St Mary\'s',
-            address: '7 Unity Street Ago Okota',
-            phone: '08038714611',
-            email: 'nwisuchisom@gmail.com',
-            distance: '20km'),
-        ParishModel(
-            name: 'St Mary\'s',
-            address: '7 Unity Street Ago Okota',
-            phone: '08038714611',
-            email: 'nwisuchisom@gmail.com',
-            distance: '20km'),
-        ParishModel(
-            name: 'St Mary\'s',
-            address: '7 Unity Street Ago Okota',
-            phone: '08038714611',
-            email: 'nwisuchisom@gmail.com',
-            distance: '20km'),
-      ],
-    ),
-    DeaneryModel(
-      name: 'Apapa',
-      parishes: [
-        ParishModel(
-            name: 'St Mary\'s',
-            address: '7 Unity Street Ago Okota',
-            phone: '08038714611',
-            email: 'nwisuchisom@gmail.com',
-            distance: '20km'),
-        ParishModel(
-            name: 'St Mary\'s',
-            address: '7 Unity Street Ago Okota',
-            phone: '08038714611',
-            email: 'nwisuchisom@gmail.com',
-            distance: '20km'),
-        ParishModel(
-            name: 'St Mary\'s',
-            address: '7 Unity Street Ago Okota',
-            phone: '08038714611',
-            email: 'nwisuchisom@gmail.com',
-            distance: '20km'),
-      ],
-    ),
-  ];
   int currentIndex;
+
+  Future<List<models.Deanery>> futureDeaneries;
+
+  @override
+  void initState() {
+    futureDeaneries = AppData.appDataProvider(context).getDeaneries();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StaticLayout(
@@ -118,81 +58,109 @@ class _DeaneryState extends State<Deanery> {
       children: [
         NavBarFiller(),
         Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              DeaneryModel deanery = deaneries[index];
-              return Column(
-                children: [
-                  DeanListItem(
-                    name: deanery.name,
-                    color:
-                        currentIndex == index ? Colors.white : kListTileColor,
-                    isTapped: currentIndex == index,
-                    onTap: () {
-                      setState(() {
-                        if (currentIndex == index) {
-                          currentIndex = deaneries.length;
-                        } else {
-                          currentIndex = index;
-                        }
-                      });
-                    },
-                  ),
-                  if (currentIndex == index)
-                    ...deanery.parishes.map((parish) {
-                      pIndexCount = deanery.parishes.indexOf((parish));
-                      return Column(
-                        children: [
-                          DeanListSubItem(
-                            color: Colors.white,
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(ParishViewPage.id);
-                            },
-                            leading: BackgroundImageContainer(
-                              image: networkImageCache(url: parish.image),
-                              height: 80,
-                              width: 80,
-                            ),
-                            trialing: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(parish.name ?? ''),
-                                    TextLine('Address: ', parish.address ?? ''),
-                                    TextLine('Phone: ', parish.phone ?? ''),
-                                    TextLine('Email: ', parish.email ?? ''),
-                                  ],
-                                ),
-                                TextLine(
-                                  'Distance: ',
-                                  parish.distance ?? '',
-                                  defaultStyle: kLabelTextStyle.copyWith(
-                                      color: Color(0xFF5B1314)),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (pIndexCount < deanery.parishes.length - 1)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 0.0),
-                              child: Divider(
-                                thickness: 2.0,
-                                color: kListTileColor,
+          child: FutureHelper<List<models.Deanery>>(
+              task: futureDeaneries,
+              onRefresh: () async {
+                print('refreshing');
+                List<models.Deanery> result =
+                    await AppData.appDataProvider(context).refreshDeaneries();
+                setState(() {
+                  futureDeaneries = Future.value(result);
+                });
+              },
+              builder: (context, deaneries) {
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    models.Deanery deanery = deaneries[index];
+                    return deaneries.length == 0
+                        ? NoItem()
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              DeanListItem(
+                                name: deanery.name,
+                                color: currentIndex == index
+                                    ? Colors.white
+                                    : kListTileColor,
+                                isTapped: currentIndex == index,
+                                onTap: () {
+                                  setState(() {
+                                    if (currentIndex == index) {
+                                      currentIndex = deaneries.length;
+                                    } else {
+                                      currentIndex = index;
+                                    }
+                                  });
+                                },
                               ),
-                            ),
-                        ],
-                      );
-                    }).toList()
-                ],
-              );
-            },
-            itemCount: deaneries.length,
-          ),
+                              if (currentIndex == index)
+                                ...deanery.parishes.map((parish) {
+                                  pIndexCount =
+                                      deanery.parishes.indexOf((parish));
+                                  return Column(
+                                    children: [
+                                      DeanListSubItem(
+                                        color: Colors.white,
+                                        onTap: () {
+                                          Navigator.of(context).pushNamed(
+                                              ParishViewPage.id,
+                                              arguments: parish);
+                                        },
+                                        leading: BackgroundImageContainer(
+                                          image: networkImageCache(
+                                              url: parish.image),
+                                          height: 80,
+                                          width: 80,
+                                        ),
+                                        trialing: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(parish.name ?? ''),
+                                                TextLine('Address: ',
+                                                    parish.address ?? ''),
+                                                TextLine('Phone: ',
+                                                    parish.phone ?? ''),
+                                                TextLine('Email: ',
+                                                    parish.email ?? ''),
+                                              ],
+                                            ),
+                                            TextLine(
+                                              'Distance: ',
+                                              parish.longitude?.toString() ??
+                                                  '',
+                                              defaultStyle:
+                                                  kLabelTextStyle.copyWith(
+                                                      color: Color(0xFF5B1314)),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (pIndexCount <
+                                          deanery.parishes.length - 1)
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 0.0),
+                                          child: Divider(
+                                            thickness: 2.0,
+                                            color: kListTileColor,
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                }).toList()
+                            ],
+                          );
+                  },
+                  itemCount: deaneries.length,
+                );
+              }),
         ),
       ],
     );

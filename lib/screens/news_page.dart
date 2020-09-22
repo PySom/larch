@@ -1,11 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
+import 'package:lagosarchdiocese/helpers/layout.dart';
 import 'package:lagosarchdiocese/helpers/network_image_cache.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
+import 'package:lagosarchdiocese/models/news.dart' as models;
+import 'package:lagosarchdiocese/providers/app_data_provider.dart';
 import 'package:lagosarchdiocese/screens/main_news.dart';
 import 'package:lagosarchdiocese/ui_widgets/circle_image.dart';
+import 'package:lagosarchdiocese/ui_widgets/future_helper.dart';
 import 'package:lagosarchdiocese/ui_widgets/list_item.dart';
 import 'package:lagosarchdiocese/ui_widgets/load_web_view.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
@@ -17,20 +20,23 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-  List<dynamic> items = [1, 2, 3, 4, 5, 6, 6, 8, 9, 10];
-  List<Column> _myListView(BuildContext context) {
+  bool _isEmpty = true;
+
+  Future<List<models.News>> futureNews;
+  List<Column> _myListView(BuildContext context, List<models.News> news) {
     List<Column> listItems = [];
-    for (int index = 0; index < items.length; index++) {
+    for (models.News item in news) {
       listItems.add(Column(
         children: <Widget>[
           ListItem(
             onTap: () {
-              Navigator.of(context).pushNamed(MainNews.id);
+              Navigator.of(context).pushNamed(MainNews.id, arguments: item);
             },
+            image: item.image,
             child: ListItemSide(
-              title: 'Prayers',
-              brief: 'Hello all',
-              date: 'Joly 30, 2020 : 10:00',
+              title: item.title,
+              brief: item.brief,
+              date: item.datePosted,
             ),
           ),
           SizedBox(
@@ -42,46 +48,82 @@ class _NewsPageState extends State<NewsPage> {
     return listItems;
   }
 
+  Future<List<models.News>> futureTask() async {
+    var result = await AppData.appDataProvider(context).getNews();
+    setState(() {
+      _isEmpty = result.length == 0;
+    });
+    return Future.value(result);
+  }
+
+  @override
+  void initState() {
+    futureNews = futureTask();
+    super.initState();
+  }
+
+  List<Widget> _children(List<models.News> news) {
+    if (news.length == 0)
+      return [NoItem()];
+    else {
+      models.News firstNews = news.first;
+      return [
+        News(
+          child: SafeArea(
+            child: Padded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Icon(Icons.arrow_back),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          subject: firstNews.title ?? '',
+          image: firstNews.image ?? '',
+          content: firstNews.brief ?? '',
+          stackedImages: [null, null, null],
+          date: firstNews.datePosted != null
+              ? firstNews.datePosted.split('T')[0]
+              : '',
+          likes: 0,
+          comments: 0,
+          shares: 0,
+        ),
+        ..._myListView(context, news),
+      ];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(MainNews.id);
-            },
-            child: News(
-              child: SafeArea(
-                child: Padded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Icon(Icons.arrow_back),
-                      ),
-                    ],
-                  ),
+      appBar: _isEmpty ? customAppBar(context, 'NEWS') : null,
+      body: FutureHelper<List<models.News>>(
+          task: futureNews,
+          onRefresh: () async {
+            List<models.News> result =
+                await AppData.appDataProvider(context).refreshNews();
+            setState(() {
+              _isEmpty = result.length == 0;
+              futureNews = Future.value(result);
+            });
+          },
+          builder: (context, news) {
+            return ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                Column(
+                  children: _children(news),
                 ),
-              ),
-              subject:
-                  'Archbishop Alfred Adewale Martins 35th Ordination Anniversery (Press Release)',
-              content:
-                  'Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl',
-              stackedImages: [null, null, null],
-              date: '3 days ago',
-              likes: 10,
-              comments: 10,
-              shares: 10,
-            ),
-          ),
-          ..._myListView(context),
-        ],
-      ),
+              ],
+            );
+          }),
     );
   }
 }
@@ -112,7 +154,7 @@ class News extends StatelessWidget {
       children: <Widget>[
         BackgroundImageContainer(
           height: 350,
-          image: networkImageCache(),
+          image: networkImageCache(url: '$kBaseUrl/$image'),
           child: child,
         ),
         Padding(

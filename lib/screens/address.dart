@@ -10,7 +10,7 @@ class AddressPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Layout(
-      title: "Contact",
+      title: "CONTACT",
       children: <Widget>[
         Padded(
           child: Column(

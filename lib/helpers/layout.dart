@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lagosarchdiocese/screens/home.dart';
 import 'package:lagosarchdiocese/ui_widgets/nav_bar_filler.dart';
 
 class Layout extends StatelessWidget {
@@ -9,10 +10,7 @@ class Layout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-          centerTitle: true,
-        ),
+        appBar: customAppBar(context, title),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -33,4 +31,20 @@ class Layout extends StatelessWidget {
           ],
         ));
   }
+}
+
+AppBar customAppBar(BuildContext context, String title) {
+  return AppBar(
+    leading: GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(HomePage.id);
+      },
+      child: Icon(
+        Icons.arrow_back,
+        color: Colors.white,
+      ),
+    ),
+    title: Text(title),
+    centerTitle: true,
+  );
 }

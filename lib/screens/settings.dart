@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lagosarchdiocese/helpers/layout.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
+import 'package:lagosarchdiocese/models/user_model.dart';
+import 'package:lagosarchdiocese/providers/app_data_provider.dart';
+import 'package:lagosarchdiocese/providers/auth_provider.dart';
+import 'package:lagosarchdiocese/screens/home.dart';
 import 'package:lagosarchdiocese/ui_widgets/circle_image.dart';
 import 'package:lagosarchdiocese/ui_widgets/nav_bar_filler.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
+
+import 'auth/login.dart';
 
 class Settings extends StatefulWidget {
   static const String id = 'settings';
@@ -12,6 +18,18 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  User user;
+  String fullName;
+  String email;
+  @override
+  void initState() {
+    user = Auth.authProvider(context).user;
+    fullName = user?.fullName;
+    email = user?.email;
+    AppData.appDataProvider(context).setLastRoute(Settings.id);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Layout(
@@ -37,7 +55,7 @@ class _SettingsState extends State<Settings> {
               width: double.infinity,
             ),
             Text(
-              'Anonymous user',
+              fullName ?? 'Anonymous user',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             Text(
@@ -60,6 +78,7 @@ class _SettingsState extends State<Settings> {
                   Text('Email'),
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
+                    initialValue: email,
                     decoration: const InputDecoration(
                       hintText: 'youremail@email.com',
                       fillColor: Colors.transparent,
@@ -78,6 +97,7 @@ class _SettingsState extends State<Settings> {
                   Text('Name'),
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    initialValue: fullName,
                     decoration: const InputDecoration(
                       hintText: 'Cyprian Iwene Tansi',
                       fillColor: Colors.transparent,
@@ -135,7 +155,11 @@ class _SettingsState extends State<Settings> {
       ],
       bottomItem: Padded(
         child: GestureDetector(
-          onTap: () {},
+          onTap: () {
+            Auth.authProvider(context).logout();
+            //push both routes to login screen
+            Navigator.of(context).pushNamed(LoginScreen.id);
+          },
           child: Text(
             'Log out',
             style: TextStyle(

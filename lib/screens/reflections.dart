@@ -3,8 +3,11 @@ import 'package:lagosarchdiocese/helpers/background_image_container.dart';
 import 'package:lagosarchdiocese/helpers/network_image_cache.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
 import 'package:lagosarchdiocese/helpers/static_layout.dart';
+import 'package:lagosarchdiocese/models/reflection.dart' as models;
+import 'package:lagosarchdiocese/providers/app_data_provider.dart';
 import 'package:lagosarchdiocese/screens/deanery.dart';
 import 'package:lagosarchdiocese/screens/news_page.dart';
+import 'package:lagosarchdiocese/ui_widgets/future_helper.dart';
 import 'package:lagosarchdiocese/ui_widgets/load_web_view.dart';
 import 'package:lagosarchdiocese/ui_widgets/nav_bar_filler.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
@@ -25,31 +28,21 @@ class ReflectionModel {
       this.likes});
 }
 
-class Reflection extends StatelessWidget {
+class Reflection extends StatefulWidget {
   static const String id = 'reflections';
-  final List<ReflectionModel> reflections = [
-    ReflectionModel(
-        title: 'Call to focus on Christ',
-        author: 'Fr Mike',
-        likes: 3142,
-        content:
-            '<p>Hello all my name is mr gotzie<br/>Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum </p> ',
-        imageUrls: [null, null]),
-    ReflectionModel(
-        title: 'Call to focus on Christ',
-        author: 'Fr Mike',
-        likes: 3142,
-        content:
-            '<p>Hello all my name is mr gotzie<br/>Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum </p> ',
-        imageUrls: [null, null]),
-    ReflectionModel(
-        title: 'Call to focus on Christ',
-        author: 'Fr Mike',
-        likes: 3142,
-        content:
-            '<p>Hello all my name is mr gotzie<br/>Cras gravida bibendum dolor eu varius.  Ipsum fermentum velit nisl, eget vehicula.Cras gravida bibendum dolor eu varius.  Ipsum fermentum </p> ',
-        imageUrls: [null, null]),
-  ];
+
+  @override
+  _ReflectionState createState() => _ReflectionState();
+}
+
+class _ReflectionState extends State<Reflection> {
+  Future<List<models.Reflection>> futureReflections;
+
+  @override
+  void initState() {
+    futureReflections = AppData.appDataProvider(context).getReflections();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,21 +54,41 @@ class Reflection extends StatelessWidget {
           height: 20.0,
         ),
         Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              ReflectionModel reflection = reflections[index];
-              return ReflectionItem(
-                title: reflection.title ?? '',
-                image: reflection.image,
-                imageUrls: reflection.imageUrls,
-                author: reflection.author ?? '',
-                likes: reflection.likes?.toString(),
-                content: reflection.content ?? '',
-              );
-            },
-            itemCount: reflections.length,
-          ),
-        )
+          child: FutureHelper<List<models.Reflection>>(
+              task: futureReflections,
+              onRefresh: () async {
+                print('refreshing');
+                List<models.Reflection> result =
+                    await AppData.appDataProvider(context).refreshReflections();
+                setState(() {
+                  futureReflections = Future.value(result);
+                });
+              },
+              builder: (context, reflections) {
+                print('strange things');
+                return reflections.length == 0
+                    ? ListView(
+                        padding: EdgeInsets.zero,
+                        children: [
+                          NoItem(),
+                        ],
+                      )
+                    : ListView.builder(
+                        itemBuilder: (context, index) {
+                          print('weird');
+                          models.Reflection reflection = reflections[index];
+                          print('reflection is ${reflections.length}');
+                          return ReflectionItem(
+                            title: reflection.title ?? '',
+                            image: reflection.image,
+                            author: 'Archdiocese',
+                            content: reflection.content ?? '',
+                          );
+                        },
+                        itemCount: reflections.length,
+                      );
+              }),
+        ),
       ],
     );
   }
@@ -96,7 +109,7 @@ class ReflectionItem extends StatelessWidget {
       this.author,
       this.imageUrls,
       this.likes,
-      this.color = Colors.white});
+      this.color = kListTileColor});
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +124,7 @@ class ReflectionItem extends StatelessWidget {
               children: <Widget>[
                 BackgroundImageContainer(
                   height: 140.0,
-                  image: networkImageCache(url: image),
+                  image: networkImageCache(url: '$kBaseUrl/$image'),
                 ),
                 SizedBox(
                   height: 10.0,
@@ -148,37 +161,37 @@ class ReflectionItem extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              color: kListTileColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  if (imageUrls != null && imageUrls.length > 0)
-                    Expanded(
-                      child: StackedImages(
-                        urls: imageUrls,
-                        extra: CircleAvatar(
-                          backgroundColor: Colors.red,
-                          radius: 22,
-                          child: Icon(
-                            Icons.favorite,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  Expanded(
-                    child: TextLine(
-                      likes == null ? 0.toString() : likes,
-                      ' liked this',
-                      defaultStyle:
-                          TextStyle(fontSize: 12.0, color: Colors.black),
-                    ),
-                  )
-                ],
-              ),
-            )
+            // Container(
+            //   padding: EdgeInsets.all(10.0),
+            //   color: kListTileColor,
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.start,
+            //     children: [
+            //       if (imageUrls != null && imageUrls.length > 0)
+            //         Expanded(
+            //           child: StackedImages(
+            //             urls: imageUrls,
+            //             extra: CircleAvatar(
+            //               backgroundColor: Colors.red,
+            //               radius: 22,
+            //               child: Icon(
+            //                 Icons.favorite,
+            //                 color: Colors.white,
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       Expanded(
+            //         child: TextLine(
+            //           likes == null ? 0.toString() : likes,
+            //           ' liked this',
+            //           defaultStyle:
+            //               TextStyle(fontSize: 12.0, color: Colors.black),
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // )
           ],
         ),
       ),

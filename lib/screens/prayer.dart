@@ -58,7 +58,7 @@ class _PrayerPageState extends State<PrayerPage> {
   @override
   Widget build(BuildContext context) {
     return StaticLayout(
-      title: 'Prayer',
+      title: 'PRAYER',
       children: <Widget>[
         Expanded(
           child: ListView(
