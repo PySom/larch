@@ -75,26 +75,24 @@ class _LoginScreenState extends State<LoginScreen> {
             horizontal: 10.0,
             vertical: 14.0,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(
             children: <Widget>[
-              Expanded(
-                child: AltAuthAction(
-                  defaultStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                  ),
-                  leadingText: 'New? ',
-                  actionText: 'Sign up',
-                  actionStyle: TextStyle(decoration: TextDecoration.underline),
-                  onTap: () {
-                    Navigator.of(context).pushNamed(SignUpScreen.id);
-                  },
+              AltAuthAction(
+                defaultStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w300,
                 ),
+                leadingText: 'New? ',
+                actionText: 'Sign up',
+                actionStyle: TextStyle(decoration: TextDecoration.underline),
+                onTap: () {
+                  Navigator.of(context).pushNamed(SignUpScreen.id);
+                },
               ),
-              Expanded(
-                child: HomeAction(),
-              )
+              SizedBox(
+                height: 20.0,
+              ),
+              HomeAction()
             ],
           ),
         )

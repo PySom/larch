@@ -22,7 +22,7 @@ class NetworkHelper {
     String lastName = split.last;
     var body = Register(
       firstName: firstName,
-      lastName: lastName,
+      surName: lastName,
       email: email,
       password: password,
     ).toJson();
@@ -30,7 +30,7 @@ class NetworkHelper {
   }
 
   Future<dynamic> authRequest(Map body, String url) async {
-    print('body is $body');
+    print('body is $body, $url');
     var response =
         await http.post(url, headers: kHeaders(null), body: json.encode(body));
     print(response.body);
@@ -63,7 +63,7 @@ class NetworkHelper {
     if (name == null) {
       return ['', ''];
     }
-    List<String> splitted = name.split(',');
+    List<String> splitted = name.split(' ');
     if (splitted.length == 1) {
       return [splitted[0], ''];
     }

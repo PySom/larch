@@ -1,18 +1,22 @@
 class Register {
   String firstName;
-  String lastName;
+  String surName;
   String email;
   String password;
   String confirmPassword;
-  String phone = '08045673211';
+  String phone;
 
   Register(
-      {this.firstName, this.lastName, this.email, this.password, this.phone});
+      {this.firstName,
+      this.surName,
+      this.email,
+      this.password,
+      this.phone = '08045673211'});
 
   Map<String, String> toJson() {
     final Map<String, String> data = new Map<String, String>();
     data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
+    data['surName'] = this.surName;
     data['email'] = this.email;
     data['password'] = this.password;
     data['confirmPassword'] = this.password;

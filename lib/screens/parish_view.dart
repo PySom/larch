@@ -41,7 +41,7 @@ class _ParishViewPageState extends State<ParishViewPage>
       isPlaying = !isPlaying;
       isPlaying ? controller.forward() : controller.reverse();
       if (isPlaying) {
-        multiplier = 0.1;
+        multiplier = 0.09;
       } else {
         multiplier = 0.6;
       }

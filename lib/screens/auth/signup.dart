@@ -128,31 +128,6 @@ class SignUpForm extends StatelessWidget {
     return Column(
       children: <Widget>[
         TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          textInputAction: TextInputAction.next,
-          decoration: const InputDecoration(
-            hintText: 'Email',
-            labelText: 'Email',
-            contentPadding: EdgeInsets.all(7.0),
-            labelStyle: TextStyle(color: Colors.black),
-            errorStyle: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          onChanged: (value) {
-            onEmailChange(value);
-          },
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Please enter some text';
-            }
-            return null;
-          },
-        ),
-        SizedBox(
-          height: 15.0,
-        ),
-        TextFormField(
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
           decoration: const InputDecoration(
@@ -166,6 +141,31 @@ class SignUpForm extends StatelessWidget {
           ),
           onChanged: (value) {
             onNameChange(value);
+          },
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+        ),
+        SizedBox(
+          height: 15.0,
+        ),
+        TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          decoration: const InputDecoration(
+            hintText: 'Email',
+            labelText: 'Email',
+            contentPadding: EdgeInsets.all(7.0),
+            labelStyle: TextStyle(color: Colors.black),
+            errorStyle: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          onChanged: (value) {
+            onEmailChange(value);
           },
           validator: (value) {
             if (value.isEmpty) {

@@ -299,6 +299,8 @@ class _DonationPageState extends State<DonationPage> {
                                           ).show(context);
                                           return;
                                         }
+                                        FocusManager.instance.primaryFocus
+                                            .unfocus();
                                         PayModel payModel = PayModel(
                                           name: name,
                                           email: email,
