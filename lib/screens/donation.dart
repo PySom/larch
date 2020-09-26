@@ -304,6 +304,7 @@ class _DonationPageState extends State<DonationPage> {
                                         PayModel payModel = PayModel(
                                           name: name,
                                           email: email,
+                                          phone: phone,
                                           amount: amount,
                                           donation: _donation.title,
                                           donationId: _donation.id,

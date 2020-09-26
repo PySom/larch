@@ -41,7 +41,7 @@ class _PaymentPageState extends State<PaymentPage> {
   Widget build(BuildContext context) {
     PayModel model = ModalRoute.of(context).settings.arguments;
     String url =
-        '$kPayUrl?name=${model.name}&email=${model.email}&phone=${model.phone}'
+        '$kPayUrl?fullname=${model.name}&email=${model.email}&phone=${model.phone}'
         '&amount=${model.amount}&donationId=${model.donationId}&donation=${model.donation}';
     return SafeArea(
       child: Scaffold(
