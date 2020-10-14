@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:lagosarchdiocese/helpers/static_layout.dart';
 import 'package:lagosarchdiocese/models/occasion.dart';
 import 'package:lagosarchdiocese/providers/app_data_provider.dart';
@@ -59,7 +60,11 @@ class _EventPageState extends State<EventPage> {
                     child: ListItemSide(
                       title: item.title ?? '',
                       brief: item.brief ?? '',
-                      date: item.startDate ?? '',
+                      date: item.startDate != null
+                          ? DateFormat.yMMMd().format(
+                              DateTime.parse(item.startDate),
+                            )
+                          : '',
                     ),
                   ),
                   if (_eventIsToday(item.startDate))

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lagosarchdiocese/utils/constants.dart';
 
 class FutureHelper<T> extends StatelessWidget {
   final Future<T> task;
@@ -26,6 +27,8 @@ class FutureHelper<T> extends StatelessWidget {
           }
           return onRefresh != null
               ? RefreshIndicator(
+                  backgroundColor: kAccentColor,
+                  color: Colors.white,
                   onRefresh: onRefresh,
                   child: builder(context, snapshot.data),
                 )
