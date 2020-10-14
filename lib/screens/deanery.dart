@@ -123,12 +123,21 @@ class _DeaneryState extends State<Deanery> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(parish.name ?? ''),
-                                                TextLine('Address: ',
-                                                    parish.address ?? ''),
-                                                TextLine('Phone: ',
-                                                    parish.phone ?? ''),
-                                                TextLine('Email: ',
-                                                    parish.email ?? ''),
+                                                TextLine(
+                                                  'Address: ',
+                                                  parish.address ?? '',
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                                TextLine(
+                                                  'Phone: ',
+                                                  parish.phone ?? '',
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                                TextLine(
+                                                  'Email: ',
+                                                  parish.email ?? '',
+                                                  textAlign: TextAlign.left,
+                                                ),
                                               ],
                                             ),
                                             TextLine(
@@ -235,13 +244,14 @@ class TextLine extends StatelessWidget {
   final String leadingText;
   final String trailingText;
   final TextStyle defaultStyle;
+  final TextAlign textAlign;
 
   TextLine(this.leadingText, this.trailingText,
-      {this.defaultStyle = kListSubTextStyle});
+      {this.defaultStyle = kListSubTextStyle, this.textAlign});
   @override
   Widget build(BuildContext context) {
     return RichText(
-      textAlign: TextAlign.center,
+      textAlign: textAlign ?? TextAlign.center,
       text: TextSpan(
         style: defaultStyle,
         children: [

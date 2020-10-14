@@ -32,7 +32,7 @@ class _NewsPageState extends State<NewsPage> {
             onTap: () {
               Navigator.of(context).pushNamed(MainNews.id, arguments: item);
             },
-            image: item.image,
+            image: item.image != null ? '$kBaseUrl/${item.image}' : null,
             child: ListItemSide(
               title: item.title,
               brief: item.brief,

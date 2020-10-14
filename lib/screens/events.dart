@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lagosarchdiocese/helpers/static_layout.dart';
+import 'package:lagosarchdiocese/models/occasion.dart';
+import 'package:lagosarchdiocese/providers/app_data_provider.dart';
+import 'package:lagosarchdiocese/ui_widgets/future_helper.dart';
 import 'package:lagosarchdiocese/ui_widgets/list_item.dart';
 import 'package:lagosarchdiocese/ui_widgets/nav_bar_filler.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
@@ -12,13 +15,29 @@ class EventPage extends StatefulWidget {
 }
 
 class _EventPageState extends State<EventPage> {
+  Future<List<Occasion>> futureEvents;
+
+  @override
+  void initState() {
+    futureEvents = AppData.appDataProvider(context).getEvents();
+    super.initState();
+  }
+
   int _index = DEFAULT;
-  List<dynamic> items = [
-    1,
-  ];
-  List<Column> _myListView(BuildContext context) {
+
+  bool _eventIsToday(String date) {
+    if (date == null) return false;
+    DateTime thisDay = DateTime.parse(date);
+    Duration diff = DateTime.now().difference(thisDay);
+    if (diff.inDays > 1) return false;
+    return true;
+  }
+
+  List<Column> _myListView(BuildContext context, List<Occasion> items) {
     List<Column> listItems = [];
     for (int index = 0; index < items.length; index++) {
+      Occasion item = items[index];
+      print('title is ${item.image}');
       listItems.add(
         Column(
           children: <Widget>[
@@ -38,12 +57,12 @@ class _EventPageState extends State<EventPage> {
                 children: <Widget>[
                   Expanded(
                     child: ListItemSide(
-                      title: 'Anniversary',
-                      brief: 'Anniversary of The Archbishop',
-                      date: 'September 12, 2020 : 10:00',
+                      title: item.title ?? '',
+                      brief: item.brief ?? '',
+                      date: item.startDate ?? '',
                     ),
                   ),
-                  if (index == items.length - 1)
+                  if (_eventIsToday(item.startDate))
                     Row(
                       children: [
                         SizedBox(
@@ -63,12 +82,11 @@ class _EventPageState extends State<EventPage> {
             if (_index == index)
               ListSubItem(
                 color: Colors.white,
-                image: 'https://lagosarchdiocese.org/picfornews/g431.jpg',
-                title: 'Anniversary',
-                subtitle: 'Anniversary of The Archbishop',
-                content:
-                    'Today is the 8th anniversary of the Installation of Archbishop Alfred Adewale Martins as the 4th Archbishop of Lagos. We thank the good Lord for the graces bestowed upon him in these past seven years as our Chief Shepherd. '
-                    'Join the Mass at 12pm on Lumen Christi, DSTV Channel 350 & online at <a href="www.chrismmasslagos.com">www.chrismmasslagos.com</a>',
+                image:
+                    item.image != null ? '$kBaseUrl/${item.image}' : item.image,
+                title: item.title,
+                subtitle: item.brief,
+                content: item.content,
               ),
             if (_index != index)
               SizedBox(
@@ -88,15 +106,27 @@ class _EventPageState extends State<EventPage> {
       title: 'EVENTS',
       children: <Widget>[
         Expanded(
-          child: ListView(
-            children: <Widget>[
-              NavBarFiller(),
-              SizedBox(
-                height: 20.0,
-              ),
-              ..._myListView(context),
-            ],
-          ),
+          child: FutureHelper<List<Occasion>>(
+              task: futureEvents,
+              onRefresh: () async {
+                print('refreshing');
+                List<Occasion> result =
+                    await AppData.appDataProvider(context).refreshEvents();
+                setState(() {
+                  futureEvents = Future.value(result);
+                });
+              },
+              builder: (context, events) {
+                return ListView(
+                  children: <Widget>[
+                    NavBarFiller(),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    ..._myListView(context, events),
+                  ],
+                );
+              }),
         ),
       ],
     );

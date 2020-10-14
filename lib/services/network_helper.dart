@@ -46,6 +46,7 @@ class NetworkHelper {
   }
 
   Future<dynamic> getRequest(String url) async {
+    print('in here');
     var response = await http.get(url, headers: kHeaders(null));
     print(response.body);
     var decoded = jsonDecode(response.body);

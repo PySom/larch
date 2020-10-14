@@ -48,7 +48,7 @@ class ListItem extends StatelessWidget {
               children: <Widget>[
                 CircleImage(
                   radius: 30,
-                  url: image != null ? '$kBaseUrl/$image' : null,
+                  url: image,
                 ),
                 SizedBox(
                   width: 20.0,
@@ -68,6 +68,7 @@ class ListItem extends StatelessWidget {
 class ListSubItem extends StatelessWidget {
   final String image;
   final String title;
+  final double width;
   final String subtitle;
   final String content;
   final Color color;
@@ -76,12 +77,14 @@ class ListSubItem extends StatelessWidget {
       this.title,
       this.content,
       this.subtitle,
-      this.color = kListTileColor});
+      this.color = kListTileColor,
+      this.width});
 
   @override
   Widget build(BuildContext context) {
     return Padded(
       child: Container(
+        width: width,
         color: color,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,10 +107,8 @@ class ListSubItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    title,
-                    style:
-                        kLabelHeaderStyle.copyWith(fontWeight: FontWeight.w500),
+                  LoadWebView(
+                    data: title,
                   ),
                   SizedBox(
                     height: 7,

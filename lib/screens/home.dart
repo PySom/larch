@@ -16,6 +16,7 @@ import '../ui_widgets/drawer_view.dart';
 import '../ui_widgets/rounded_box.dart';
 import '../ui_widgets/rounded_box_child.dart';
 import '../utils/constants.dart';
+import 'address.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = 'home_page_screen';
@@ -38,7 +39,41 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: _scaffoldKey,
       drawerScrimColor: Colors.transparent,
-      drawer: DrawerView(),
+      drawer: DrawerView(
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              'Home',
+              style: kDrawerItemStyle,
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  HomePage.id, (Route<dynamic> route) => false);
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              'Contact Us',
+              style: kDrawerItemStyle,
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamed(AddressPage.id);
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              'Prayer',
+              style: kDrawerItemStyle,
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamed(PrayerPage.id);
+            },
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -53,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                       height: 10.0,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         GestureDetector(
                           onTap: () {
@@ -178,6 +213,7 @@ class _HomePageState extends State<HomePage> {
             ),
             BackgroundImageContainer(
               height: 200.0,
+              width: double.infinity,
               padding: EdgeInsets.all(16.0),
               margin: EdgeInsets.only(
                 left: 20.0,
@@ -190,8 +226,8 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Welcome to the Catholic Archdiocese of Lagos App",
-                    style: kParishLabelStyle,
+                    'Introíbo ad altáre Dei.\nAd Deum, qui lætíficat iuventútem meam.',
+                    style: kParishLabelStyle.copyWith(fontSize: 16),
                   ),
                 ],
               ),

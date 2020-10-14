@@ -116,3 +116,4 @@ const String kOccasion = 'occasion_hive';
 const String kParish = 'parish_hive';
 const String kQuote = 'quote_hive';
 const String kReflection = 'reflection_hive';
+const String kPrayer = 'prayer_hive';

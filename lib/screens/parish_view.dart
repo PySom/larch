@@ -118,12 +118,12 @@ class BottomItem extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
               child: ParishDetail(
-                name: parish?.name ?? 'St Mary\'s Catholic Church',
-                address: parish?.address ?? '7 Ire Akari Estate, Ilasamaja',
-                telephone: parish?.phone ?? '08038714611',
-                email: parish?.email ?? 'nwisuchisom@gmail.com',
-                mass: parish?.massDetail ?? _loadHTML(),
-                confession: parish?.confessionDetail ?? _loadHTML(),
+                name: parish?.name ?? '',
+                address: parish?.address ?? '',
+                telephone: parish?.phone ?? '',
+                email: parish?.email ?? '',
+                mass: parish?.massDetail ?? '',
+                confession: parish?.confessionDetail ?? '',
               ),
             ),
           ),
@@ -131,11 +131,6 @@ class BottomItem extends StatelessWidget {
       ),
     );
   }
-}
-
-String _loadHTML() {
-  return '<p>Goodness gracious</p>'
-      '<p>Goodness gracious</p>';
 }
 
 class NavBar extends StatelessWidget {

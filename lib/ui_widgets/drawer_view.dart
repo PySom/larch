@@ -9,8 +9,13 @@ import '../screens/donation.dart';
 import '../screens/home.dart';
 
 class DrawerView extends StatelessWidget {
+  final Widget header;
+  final Widget loner;
+  final List<Widget> children;
+  DrawerView({this.header, this.children, this.loner});
   @override
   Widget build(BuildContext context) {
+    final List<Widget> thisChildren = children ?? [];
     User user = Auth.authProvider(context).user;
     return Drawer(
       child: Container(
@@ -42,27 +47,13 @@ class DrawerView extends StatelessWidget {
                       SizedBox(
                         height: 60.0,
                       ),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(
-                          'Home',
-                          style: kDrawerItemStyle,
+                      loner ?? SizedBox(),
+                      if (loner != null)
+                        SizedBox(
+                          height: 20.0,
                         ),
-                        onTap: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              HomePage.id, (Route<dynamic> route) => false);
-                        },
-                      ),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(
-                          'Contact Us',
-                          style: kDrawerItemStyle,
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pushNamed(AddressPage.id);
-                        },
-                      ),
+                      header ?? SizedBox(),
+                      ...thisChildren,
                     ],
                   ),
                 ),

@@ -10,6 +10,7 @@ class MainNews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final models.News news = ModalRoute.of(context).settings.arguments;
+    print(news.image);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(

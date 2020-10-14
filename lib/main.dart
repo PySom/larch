@@ -6,6 +6,7 @@ import 'package:lagosarchdiocese/models/donor.dart';
 import 'package:lagosarchdiocese/models/news.dart';
 import 'package:lagosarchdiocese/models/occasion.dart';
 import 'package:lagosarchdiocese/models/parish.dart';
+import 'package:lagosarchdiocese/models/prayer_category.dart';
 import 'package:lagosarchdiocese/models/quote.dart';
 import 'package:lagosarchdiocese/models/reflection.dart';
 import 'package:lagosarchdiocese/providers/provider_list.dart';
@@ -13,6 +14,7 @@ import 'package:lagosarchdiocese/screens/splash_screen.dart';
 import 'package:lagosarchdiocese/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'models/app_model.dart';
+import 'models/prayer.dart';
 import 'models/user_model.dart';
 import 'utils/theme_data.dart';
 import 'package:path_provider/path_provider.dart' as pp;
@@ -40,6 +42,8 @@ _openHive() async {
   Hive.registerAdapter(ParishAdapter());
   Hive.registerAdapter(QuoteAdapter());
   Hive.registerAdapter(ReflectionAdapter());
+  Hive.registerAdapter(PrayerCategoryAdapter());
+  Hive.registerAdapter(PrayerAdapter());
 }
 
 class Larch extends StatelessWidget {

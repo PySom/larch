@@ -103,7 +103,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               Image(
                 image: AssetImage('${kImageUrl}logo.png'),
-                height: controller.value * 100,
+                height: 100,
               ),
               SizedBox(
                 height: 20.0,

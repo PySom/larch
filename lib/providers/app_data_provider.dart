@@ -5,6 +5,7 @@ import 'package:lagosarchdiocese/models/deanery.dart';
 import 'package:lagosarchdiocese/models/donation.dart';
 import 'package:lagosarchdiocese/models/news.dart';
 import 'package:lagosarchdiocese/models/occasion.dart';
+import 'package:lagosarchdiocese/models/prayer_category.dart';
 import 'package:lagosarchdiocese/models/quote.dart';
 import 'package:lagosarchdiocese/models/reflection.dart';
 import 'package:lagosarchdiocese/repository/hive_repository.dart';
@@ -18,6 +19,7 @@ class AppData {
   List<News> _news;
   List<Occasion> _occasions;
   List<Quote> _quotes;
+  List<PrayerCategory> _prayerCategory;
   List<Reflection> _reflections;
   AppModel _appModel;
 
@@ -77,6 +79,26 @@ class AppData {
     }
   }
 
+  Future<List<PrayerCategory>> getPrayers() async {
+    if (_prayerCategory != null) return _prayerCategory;
+    return await refreshPrayers();
+  }
+
+  Future<List<PrayerCategory>> refreshPrayers() async {
+    try {
+      print('trying');
+      var data =
+          await _helper.getRequest('$kAppAPIUrl/prayercategories/includechild');
+      _prayerCategory = (data as List)
+          .map((datum) => PrayerCategory.fromJson(datum))
+          .toList();
+      _persistItem<List<PrayerCategory>>(_prayerCategory, kPrayer);
+      return _prayerCategory;
+    } catch (ex) {
+      throw ApiFailureException(ex);
+    }
+  }
+
   Future<List<Reflection>> getReflections() async {
     if (_reflections != null) return _reflections;
     return await refreshReflections();
@@ -95,23 +117,23 @@ class AppData {
     }
   }
 
-  // Future<List<Event>> getEvents() async {
-  //   if (_reflections != null) return _reflections;
-  //   return await refreshReflections();
-  // }
-  //
-  // Future<List<Reflection>> refresEvents() async {
-  //   try {
-  //     var data = await _helper.getRequest('$kAppAPIUrl/reflections');
-  //     _reflections =
-  //         (data as List).map((datum) => Reflection.fromJson(datum)).toList();
-  //     _persistItem<List<Reflection>>(_reflections, kReflection);
-  //     //_persistDeaneries(data);
-  //     return _reflections;
-  //   } catch (ex) {
-  //     throw ApiFailureException(ex);
-  //   }
-  // }
+  Future<List<Occasion>> getEvents() async {
+    if (_occasions != null) return _occasions;
+    return await refreshEvents();
+  }
+
+  Future<List<Occasion>> refreshEvents() async {
+    try {
+      var data = await _helper.getRequest('$kAppAPIUrl/occasions');
+      _occasions =
+          (data as List).map((datum) => Occasion.fromJson(datum)).toList();
+      _persistItem<List<Occasion>>(_occasions, kOccasion);
+      //_persistDeaneries(data);
+      return _occasions;
+    } catch (ex) {
+      throw ApiFailureException(ex);
+    }
+  }
 
   Future<List<News>> getNews() async {
     if (_news != null) return _news;
