@@ -29,10 +29,12 @@ class AppData {
   List<News> get news => _news;
 
   void setLastRoute(String route) {
-    setAppModel(AppModel(
-        lastRoute: route,
-        token: _appModel?.token,
-        isFirstTime: _appModel?.isFirstTime));
+    if (_appModel.lastRoute != route) {
+      setAppModel(AppModel(
+          lastRoute: route,
+          token: _appModel?.token,
+          isFirstTime: _appModel?.isFirstTime));
+    }
   }
 
   AppModel get appModel => _appModel;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
+import 'package:lagosarchdiocese/helpers/static_layout.dart';
 import 'package:lagosarchdiocese/models/prayer.dart';
 import 'package:lagosarchdiocese/providers/app_data_provider.dart';
 import 'package:lagosarchdiocese/screens/home.dart';
@@ -30,9 +31,10 @@ class _PrayerPageState extends State<PrayerPage> {
         Prayer item = items[index];
         listItems.add(
           Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               ListItem(
-                image: '$kImageUrl/prayer.jpg',
+                image: '${kImageUrl}prayer.jpg',
                 onTap: () {
                   setState(() {
                     if (_index == index) {
@@ -45,13 +47,13 @@ class _PrayerPageState extends State<PrayerPage> {
                 child: ListItemSide(
                   title: item.title,
                   brief: item.title,
-                  date: DateFormat.yMMMd().format(DateTime.now()),
+                  date: '',
                 ),
               ),
               if (_index == index)
                 ListSubItem(
                   width: double.infinity,
-                  title: item.title,
+                  title: '',
                   subtitle: '',
                   content: item.content,
                 ),
@@ -67,7 +69,7 @@ class _PrayerPageState extends State<PrayerPage> {
     if (listItems.length == 0) {
       listItems.add(
         Center(
-          child: Text('No item found'),
+          child: Text('No prayers found'),
         ),
       );
     }
@@ -122,66 +124,71 @@ class _PrayerPageState extends State<PrayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      drawerScrimColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text('PRAYERS'),
-        centerTitle: true,
-      ),
-      drawer: DrawerView(
-        loner: ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(
-            'Home',
-            style: kDrawerItemStyle,
-          ),
-          onTap: () {
-            Navigator.of(context).pushNamed(HomePage.id);
-          },
+    AppData.appDataProvider(context).setLastRoute(PrayerPage.id);
+    return WillPopScope(
+      onWillPop: () => onWillPop(context),
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawerScrimColor: Colors.transparent,
+        appBar: AppBar(
+          title: Text('PRAYERS'),
+          centerTitle: true,
         ),
-        header: ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(
-            'Categories',
-            style: kDrawerItemStyle.copyWith(fontSize: 20),
-          ),
-          onTap: () {},
-        ),
-        children: _getPrayerCategories(),
-      ),
-      body: FutureHelper<List<PrayerCategory>>(
-        task: futurePrayers,
-        onRefresh: () async {
-          List<PrayerCategory> result =
-              await AppData.appDataProvider(context).refreshPrayers();
-          setState(() {
-            _prayerCats = result;
-            futurePrayers = Future.value(result);
-          });
-        },
-        builder: (context, prayers) => Column(
-          children: <Widget>[
-            Expanded(
-              child: ListView(
-                children: <Widget>[
-                  NavBarFiller(),
-                  BackgroundImageContainer(
-                    height: 180.0,
-                    image: AssetImage('${kImageUrl}larch_prayer.jpg'),
-                  ),
-                  Padded(
-                    child: Text(
-                      _categoryName ?? '',
-                      style: kLabelHeaderStyle.copyWith(
-                          color: kAccentColor, fontSize: 18),
-                    ),
-                  ),
-                  ..._myListView(context),
-                ],
-              ),
+        drawer: DrawerView(
+          loner: ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              'Home',
+              style: kDrawerItemStyle,
             ),
-          ],
+            onTap: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  HomePage.id, (Route<dynamic> route) => false);
+            },
+          ),
+          header: ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              'Categories',
+              style: kDrawerItemStyle.copyWith(fontSize: 20),
+            ),
+            onTap: () {},
+          ),
+          children: _getPrayerCategories(),
+        ),
+        body: FutureHelper<List<PrayerCategory>>(
+          task: futurePrayers,
+          onRefresh: () async {
+            List<PrayerCategory> result =
+                await AppData.appDataProvider(context).refreshPrayers();
+            setState(() {
+              _prayerCats = result;
+              futurePrayers = Future.value(result);
+            });
+          },
+          builder: (context, prayers) => Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    NavBarFiller(),
+                    BackgroundImageContainer(
+                      height: 180.0,
+                      image: AssetImage('${kImageUrl}larch_prayer.jpg'),
+                    ),
+                    Padded(
+                      child: Text(
+                        _categoryName ?? '',
+                        style: kLabelHeaderStyle.copyWith(
+                            color: kAccentColor, fontSize: 18),
+                      ),
+                    ),
+                    ..._myListView(context),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -101,6 +101,7 @@ class _EventPageState extends State<EventPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppData.appDataProvider(context).setLastRoute(EventPage.id);
     return StaticLayout(
       color: kListTileColor,
       title: 'EVENTS',

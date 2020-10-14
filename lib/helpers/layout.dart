@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lagosarchdiocese/helpers/static_layout.dart';
 import 'package:lagosarchdiocese/screens/home.dart';
 import 'package:lagosarchdiocese/ui_widgets/nav_bar_filler.dart';
 
@@ -9,27 +10,30 @@ class Layout extends StatelessWidget {
   const Layout({this.title, this.children, this.bottomItem});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: customAppBar(context, title),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    NavBarFiller(),
-                    ...children,
-                  ],
+    return WillPopScope(
+      onWillPop: () => onWillPop(context),
+      child: Scaffold(
+          appBar: customAppBar(context, title),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      NavBarFiller(),
+                      ...children,
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              child: bottomItem,
-            )
-          ],
-        ));
+              Container(
+                child: bottomItem,
+              )
+            ],
+          )),
+    );
   }
 }
 
@@ -37,7 +41,8 @@ AppBar customAppBar(BuildContext context, String title) {
   return AppBar(
     leading: GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(HomePage.id);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            HomePage.id, (Route<dynamic> route) => false);
       },
       child: Icon(
         Icons.arrow_back,

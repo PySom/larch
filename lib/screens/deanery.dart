@@ -53,6 +53,7 @@ class _DeaneryState extends State<Deanery> {
 
   @override
   Widget build(BuildContext context) {
+    AppData.appDataProvider(context).setLastRoute(Deanery.id);
     return StaticLayout(
       title: 'DEANERY',
       children: [
@@ -108,7 +109,9 @@ class _DeaneryState extends State<Deanery> {
                                         },
                                         leading: BackgroundImageContainer(
                                           image: networkImageCache(
-                                              url: parish.image),
+                                              url: parish.image != null
+                                                  ? '$kBaseUrl/${parish.image}'
+                                                  : null),
                                           height: 80,
                                           width: 80,
                                         ),

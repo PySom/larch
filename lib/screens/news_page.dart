@@ -4,8 +4,10 @@ import 'package:lagosarchdiocese/helpers/background_image_container.dart';
 import 'package:lagosarchdiocese/helpers/layout.dart';
 import 'package:lagosarchdiocese/helpers/network_image_cache.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
+import 'package:lagosarchdiocese/helpers/static_layout.dart';
 import 'package:lagosarchdiocese/models/news.dart' as models;
 import 'package:lagosarchdiocese/providers/app_data_provider.dart';
+import 'package:lagosarchdiocese/screens/home.dart';
 import 'package:lagosarchdiocese/screens/main_news.dart';
 import 'package:lagosarchdiocese/ui_widgets/circle_image.dart';
 import 'package:lagosarchdiocese/ui_widgets/future_helper.dart';
@@ -76,7 +78,8 @@ class _NewsPageState extends State<NewsPage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          HomePage.id, (Route<dynamic> route) => false);
                     },
                     child: Icon(Icons.arrow_back),
                   ),
@@ -102,28 +105,32 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _isEmpty ? customAppBar(context, 'NEWS') : null,
-      body: FutureHelper<List<models.News>>(
-          task: futureNews,
-          onRefresh: () async {
-            List<models.News> result =
-                await AppData.appDataProvider(context).refreshNews();
-            setState(() {
-              _isEmpty = result.length == 0;
-              futureNews = Future.value(result);
-            });
-          },
-          builder: (context, news) {
-            return ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                Column(
-                  children: _children(news),
-                ),
-              ],
-            );
-          }),
+    AppData.appDataProvider(context).setLastRoute(NewsPage.id);
+    return WillPopScope(
+      onWillPop: () => onWillPop(context),
+      child: Scaffold(
+        appBar: _isEmpty ? customAppBar(context, 'NEWS') : null,
+        body: FutureHelper<List<models.News>>(
+            task: futureNews,
+            onRefresh: () async {
+              List<models.News> result =
+                  await AppData.appDataProvider(context).refreshNews();
+              setState(() {
+                _isEmpty = result.length == 0;
+                futureNews = Future.value(result);
+              });
+            },
+            builder: (context, news) {
+              return ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  Column(
+                    children: _children(news),
+                  ),
+                ],
+              );
+            }),
+      ),
     );
   }
 }

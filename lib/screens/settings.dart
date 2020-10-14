@@ -26,12 +26,12 @@ class _SettingsState extends State<Settings> {
     user = Auth.authProvider(context).user;
     fullName = user?.fullName;
     email = user?.email;
-    AppData.appDataProvider(context).setLastRoute(Settings.id);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    AppData.appDataProvider(context).setLastRoute(Settings.id);
     return Layout(
       title: '',
       children: [

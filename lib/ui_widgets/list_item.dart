@@ -21,10 +21,11 @@ class ListItemSide extends StatelessWidget {
         LoadWebView(
           data: brief,
         ),
-        Text(
-          date != null ? date.split('T')[0] : '',
-          style: kListTextStyle,
-        ),
+        if (date != '')
+          Text(
+            date != null ? date.split('T')[0] : '',
+            style: kListTextStyle,
+          ),
       ],
     );
   }

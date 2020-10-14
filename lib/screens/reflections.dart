@@ -46,6 +46,7 @@ class _ReflectionState extends State<Reflection> {
 
   @override
   Widget build(BuildContext context) {
+    AppData.appDataProvider(context).setLastRoute(Reflection.id);
     return StaticLayout(
       title: 'REFLECTION',
       children: [

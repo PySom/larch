@@ -108,6 +108,7 @@ class _DonationPageState extends State<DonationPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppData.appDataProvider(context).setLastRoute(DonationPage.id);
     return Layout(
       title: "DONATION",
       children: <Widget>[

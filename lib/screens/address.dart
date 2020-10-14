@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lagosarchdiocese/helpers/layout.dart';
 import 'package:lagosarchdiocese/helpers/padded_widget.dart';
+import 'package:lagosarchdiocese/providers/app_data_provider.dart';
 import '../helpers/background_image_container.dart';
 import '../utils/constants.dart';
 
@@ -9,6 +10,7 @@ class AddressPage extends StatelessWidget {
   static const String id = 'address_page_screen';
   @override
   Widget build(BuildContext context) {
+    AppData.appDataProvider(context).setLastRoute(AddressPage.id);
     return Layout(
       title: "CONTACT",
       children: <Widget>[
