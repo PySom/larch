@@ -150,7 +150,8 @@ class _PrayerPageState extends State<PrayerPage> {
             contentPadding: EdgeInsets.zero,
             title: Text(
               'Categories',
-              style: kDrawerItemStyle.copyWith(fontSize: 20),
+              style: kDrawerItemStyle.copyWith(
+                  fontSize: 20, color: Colors.white.withOpacity(0.5)),
             ),
             onTap: () {},
           ),

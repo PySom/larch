@@ -16,33 +16,12 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> {
   HiveRepository _hiveRepository = HiveRepository();
-  AnimationController controller;
-  Animation animation;
 
   @override
   void initState() {
     super.initState();
-
-    controller = AnimationController(
-      duration: Duration(seconds: 2),
-      vsync: this,
-    );
-
-    controller.forward();
-
-    controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        controller.reverse(from: 1.0);
-      } else if (status == AnimationStatus.dismissed) {
-        controller.forward();
-      }
-    });
-    controller.addListener(() {
-      setState(() {});
-    });
     _prepareAppState();
   }
 
@@ -60,8 +39,12 @@ class _SplashScreenState extends State<SplashScreen>
     } catch (ex) {
       print(ex);
     }
+    //check if we have a known user
     if (user == null) {
+      //check if this new person is a first time user
+      //if so, show the onboarding screen
       if (appModel?.isFirstTime ?? true) {
+        print('came in here');
         appModel = AppModel(
             isFirstTime: false,
             lastRoute: appModel?.lastRoute,
@@ -70,8 +53,10 @@ class _SplashScreenState extends State<SplashScreen>
         Navigator.of(context).pushNamedAndRemoveUntil(
             Onboarding.id, (Route<dynamic> route) => false);
       } else {
+        AppData.appDataProvider(context).setAppModel(appModel);
         Navigator.of(context).pushNamedAndRemoveUntil(
-            HomePage.id, (Route<dynamic> route) => false);
+            appModel?.lastRoute ?? HomePage.id,
+            (Route<dynamic> route) => false);
       }
     } else {
       AppData.appDataProvider(context).setAppModel(appModel);
@@ -84,7 +69,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    controller.dispose();
     super.dispose();
   }
 

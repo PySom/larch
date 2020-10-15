@@ -40,6 +40,9 @@ class AppData {
   AppModel get appModel => _appModel;
   void setAppModel(AppModel model) {
     _appModel = model;
+    print('prov is first time is ${model?.isFirstTime}');
+    print('prov last route is ${model?.lastRoute}');
+    print('prov token is ${model?.token}');
     _hiveRepository.add(item: model, name: kAppDataName, key: kAppDataName);
   }
 
