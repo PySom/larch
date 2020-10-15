@@ -37,12 +37,12 @@ class Layout extends StatelessWidget {
   }
 }
 
-AppBar customAppBar(BuildContext context, String title) {
+AppBar customAppBar(BuildContext context, String title, {String route}) {
   return AppBar(
     leading: GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamedAndRemoveUntil(
-            HomePage.id, (Route<dynamic> route) => false);
+            route ?? HomePage.id, (Route<dynamic> route) => false);
       },
       child: Icon(
         Icons.arrow_back,

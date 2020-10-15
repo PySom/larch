@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "257410465985",
+    "firebase_url": "https://laapp-210322.firebaseio.com",
+    "project_id": "laapp-210322",
+    "storage_bucket": "laapp-210322.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257410465985:android:d13b8cc7b80da0bf315440",
+        "android_client_info": {
+          "package_name": "com.infomall.lagosarchdiocese"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "257410465985-tiulido52vq3bgkt79vhcgtl9goj2qdf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.infomall.lagosarchdiocese",
+            "certificate_hash": "3f9174e1c61fed33530677b14f3cfe0c1830e7c5"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR7pOx8I5b5HE2jnltrGhGGpDi64xrY88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -140,6 +140,15 @@ class AppData {
     }
   }
 
+  Future<News> getNewsWithId(int id) async {
+    try {
+      var data = await _helper.getRequest('$kAppAPIUrl/news/$id');
+      return News.fromJson(data);
+    } catch (ex) {
+      throw ApiFailureException(ex);
+    }
+  }
+
   Future<List<News>> getNews() async {
     if (_news != null) return _news;
     return await refreshNews();

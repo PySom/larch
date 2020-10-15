@@ -32,7 +32,15 @@ class _NewsPageState extends State<NewsPage> {
         children: <Widget>[
           ListItem(
             onTap: () {
-              Navigator.of(context).pushNamed(MainNews.id, arguments: item);
+              Navigator.of(context).push(
+                MaterialPageRoute<Null>(
+                  builder: (BuildContext context) {
+                    return MainNews(
+                      data: item,
+                    );
+                  },
+                ),
+              );
             },
             image: item.image != null ? '$kBaseUrl/${item.image}' : null,
             child: ListItemSide(
@@ -61,6 +69,7 @@ class _NewsPageState extends State<NewsPage> {
   @override
   void initState() {
     futureNews = futureTask();
+    print('I did come');
     super.initState();
   }
 

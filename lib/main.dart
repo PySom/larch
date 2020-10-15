@@ -11,6 +11,7 @@ import 'package:lagosarchdiocese/models/quote.dart';
 import 'package:lagosarchdiocese/models/reflection.dart';
 import 'package:lagosarchdiocese/providers/provider_list.dart';
 import 'package:lagosarchdiocese/screens/splash_screen.dart';
+import 'package:lagosarchdiocese/services/navigator_service.dart';
 import 'package:lagosarchdiocese/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'models/app_model.dart';
@@ -54,6 +55,7 @@ class Larch extends StatelessWidget {
       child: MaterialApp(
         theme: myThemeData(context),
         debugShowCheckedModeBanner: false,
+        navigatorKey: NavigationService.service.navigatorKey,
         title: 'Cath. Arch. of Lagos',
         initialRoute: SplashScreen.id,
         routes: appRoutes,

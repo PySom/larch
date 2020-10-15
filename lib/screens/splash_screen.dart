@@ -7,6 +7,7 @@ import 'package:lagosarchdiocese/providers/auth_provider.dart';
 import 'package:lagosarchdiocese/repository/hive_repository.dart';
 import 'package:lagosarchdiocese/screens/home.dart';
 import 'package:lagosarchdiocese/screens/onboarding/onboarding.dart';
+import 'package:lagosarchdiocese/services/push_notification.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     _prepareAppState();
   }
 
@@ -30,6 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
       kUserName,
       kAppDataName,
     ]);
+    PushNotification().initialize();
     User user;
     AppModel appModel;
     try {

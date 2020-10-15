@@ -27,8 +27,9 @@ class StaticLayout extends StatelessWidget {
   }
 }
 
-Future<bool> onWillPop(BuildContext context) {
-  Navigator.of(context)
-      .pushNamedAndRemoveUntil(HomePage.id, (Route<dynamic> route) => false);
+Future<bool> onWillPop(BuildContext context, {String route}) {
+  print(route);
+  Navigator.of(context).pushNamedAndRemoveUntil(
+      route ?? HomePage.id, (Route<dynamic> route) => false);
   return Future.value(false);
 }
