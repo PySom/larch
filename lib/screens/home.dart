@@ -231,8 +231,8 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Introíbo ad altáre Dei.\nAd Deum, qui lætíficat iuventútem meam.',
-                      style: kParishLabelStyle.copyWith(fontSize: 16),
+                      "Welcome to the Catholic Archdiocese of Lagos App",
+                      style: kParishLabelStyle,
                     ),
                   ],
                 ),
