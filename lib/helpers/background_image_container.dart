@@ -10,6 +10,7 @@ class BackgroundImageContainer extends StatelessWidget {
   final EdgeInsets margin;
   final bool hasShadow;
   final Color shadowColor;
+  final Color color;
   final ImageProvider<dynamic> image;
   const BackgroundImageContainer(
       {this.child,
@@ -19,11 +20,13 @@ class BackgroundImageContainer extends StatelessWidget {
       this.height,
       this.padding,
       this.hasShadow = false,
-      this.shadowColor = Colors.white});
+      this.shadowColor = Colors.white,
+      this.color});
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: new BoxDecoration(
+        color: color ?? kListTextColor.withOpacity(0.5),
         image: new DecorationImage(
           image: image ?? AssetImage('$kImageUrl$kDefaultUserImage'),
           fit: BoxFit.cover,

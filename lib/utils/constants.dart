@@ -16,7 +16,7 @@ const EdgeInsets kHomeTopBgPadding =
     EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0);
 
 const Color kListTileColor = Color(0xFFF3F3F3);
-const Color kOffWhite = Color(0xf5f5f5);
+const Color kOffWhite = Color(0xFFf5f5f5);
 const Color kPrimaryColor = Colors.white;
 const Color kDrawerColor = Color(0xFF002252);
 const Color kAccentColor = Color(0xFF003C8B);

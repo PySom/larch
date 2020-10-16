@@ -167,6 +167,7 @@ class News extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         BackgroundImageContainer(
           height: 350,
@@ -176,6 +177,7 @@ class News extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               NewsContent(
                 subject: subject,
@@ -228,6 +230,7 @@ class NewsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(
           width: double.infinity,
