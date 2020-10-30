@@ -16,7 +16,6 @@ class NetworkHelper {
 
   Future<dynamic> registerUser(
       String name, String email, String password) async {
-    print('$email, $name, $password');
     List<String> split = _splitName(name);
     String firstName = split.first;
     String lastName = split.last;
@@ -30,32 +29,22 @@ class NetworkHelper {
   }
 
   Future<dynamic> authRequest(Map body, String url) async {
-    print('body is $body, $url');
     var response =
         await http.post(url, headers: kHeaders(null), body: json.encode(body));
-    print(response.body);
     var decoded = jsonDecode(response.body);
     if (response.statusCode.toString().startsWith('2')) {
-      print(decoded);
       return decoded;
     } else {
-      print(
-          'reason is ${response.reasonPhrase} message is ${decoded['message']}');
       throw ApiFailureException(decoded['message'] ?? response.reasonPhrase);
     }
   }
 
   Future<dynamic> getRequest(String url) async {
-    print('in here');
     var response = await http.get(url, headers: kHeaders(null));
-    print(response.body);
     var decoded = jsonDecode(response.body);
     if (response.statusCode.toString().startsWith('2')) {
-      print(decoded);
       return decoded;
     } else {
-      print(
-          'reason is ${response.reasonPhrase} message is ${decoded['message']}');
       throw ApiFailureException(decoded['message'] ?? response.reasonPhrase);
     }
   }

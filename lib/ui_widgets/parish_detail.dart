@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lagosarchdiocese/utils/constants.dart';
 import 'load_web_view.dart';
@@ -18,6 +19,9 @@ class ParishDetail extends StatelessWidget {
     this.confession,
     this.mass,
   });
+
+  bool isNotNullOrEmpty(String item) => item != null && item.trim() != '';
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -26,7 +30,7 @@ class ParishDetail extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          name != null
+          isNotNullOrEmpty(name)
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
@@ -40,31 +44,31 @@ class ParishDetail extends StatelessWidget {
                   ],
                 )
               : SizedBox(),
-          address != null
+          isNotNullOrEmpty(address)
               ? DetailItem(
                   title: 'Address:',
                   item: address,
                 )
               : SizedBox(),
-          telephone != null
+          isNotNullOrEmpty(telephone)
               ? DetailItem(
                   title: 'Tel:',
                   item: telephone,
                 )
               : SizedBox(),
-          email != null
+          isNotNullOrEmpty(email)
               ? DetailItem(
                   title: 'Email:',
                   item: email,
                 )
               : SizedBox(),
-          confession != null
+          isNotNullOrEmpty(confession)
               ? DetailItemWithWebView(
                   title: 'Confession:',
                   data: confession,
                 )
               : SizedBox(),
-          mass != null
+          isNotNullOrEmpty(mass)
               ? DetailItemWithWebView(
                   title: 'Mass:',
                   data: mass,
@@ -90,7 +94,7 @@ class DetailItemWithWebView extends StatelessWidget {
         ),
         Text(
           title,
-          style: kLabelBodyStyle,
+          style: kLabelBodyStyle.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(
           width: 5.0,
@@ -115,7 +119,7 @@ class DetailItem extends StatelessWidget {
       children: <Widget>[
         Text(
           title,
-          style: kLabelBodyStyle,
+          style: kLabelBodyStyle.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(
           width: 5.0,

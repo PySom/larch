@@ -5,7 +5,5 @@ import 'auth_provider.dart';
 
 List<SingleChildWidget> appProviders = [
   ChangeNotifierProvider<Auth>(create: (_) => Auth()),
-  Provider<AppData>(
-    create: (_) => AppData(),
-  ),
+  Provider<AppData>(create: (_) => AppData()),
 ];

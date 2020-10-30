@@ -23,7 +23,9 @@ class HiveRepository implements IRepository {
   T get<T>({String key, String name}) {
     var box = Hive.box(name);
     checkBoxState(box);
-    return box.get(key);
+    print('passed');
+    var item = box.get(key);
+    return item;
   }
 
   @override

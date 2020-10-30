@@ -22,9 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    super.initState();
-
     _prepareAppState();
+    super.initState();
   }
 
   _prepareAppState() async {

@@ -20,9 +20,7 @@ class FutureHelper<T> extends StatelessWidget {
       future: task,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          print('data is in the home ${snapshot.data}');
           if (actionWhenData != null) {
-            print('something');
             actionWhenData(snapshot.data);
           }
           return onRefresh != null

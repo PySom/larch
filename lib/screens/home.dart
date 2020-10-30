@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                           },
                           boxChild: RoundedBoxChild(
                             image: "images/church.svg",
-                            title: "Deanery",
+                            title: "Parishes",
                           ),
                         ),
                         RoundedBox(

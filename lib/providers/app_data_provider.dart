@@ -40,9 +40,6 @@ class AppData {
   AppModel get appModel => _appModel;
   void setAppModel(AppModel model) {
     _appModel = model;
-    print('prov is first time is ${model?.isFirstTime}');
-    print('prov last route is ${model?.lastRoute}');
-    print('prov token is ${model?.token}');
     _hiveRepository.add(item: model, name: kAppDataName, key: kAppDataName);
   }
 
@@ -59,7 +56,6 @@ class AppData {
       _donations =
           (data as List).map((datum) => Donation.fromJson(datum)).toList();
       _persistItem<List<Donation>>(_donations, kDonation);
-      //_persistDeaneries(data);
       return _donations;
     } catch (ex) {
       throw ApiFailureException(ex);
@@ -68,7 +64,14 @@ class AppData {
 
   Future<List<Deanery>> getDeaneries() async {
     if (_deaneries != null) return _deaneries;
-    return await refreshDeaneries();
+    List<Deanery> items =
+        await _getFromHive<Deanery, List<Deanery>>(kDeanery, kDeanery);
+    if (items == null) {
+      return await refreshDeaneries();
+    } else {
+      _deaneries = items;
+      return items;
+    }
   }
 
   Future<List<Deanery>> refreshDeaneries() async {
@@ -86,7 +89,15 @@ class AppData {
 
   Future<List<PrayerCategory>> getPrayers() async {
     if (_prayerCategory != null) return _prayerCategory;
-    return await refreshPrayers();
+    List<PrayerCategory> items =
+        await _getFromHive<PrayerCategory, List<PrayerCategory>>(
+            kPrayer, kPrayer);
+    if (items == null) {
+      return await refreshPrayers();
+    } else {
+      _prayerCategory = items;
+      return items;
+    }
   }
 
   Future<List<PrayerCategory>> refreshPrayers() async {
@@ -106,6 +117,12 @@ class AppData {
 
   Future<List<Reflection>> getReflections() async {
     if (_reflections != null) return _reflections;
+    List<Reflection> items = await _getFromHive<Reflection, List<Reflection>>(
+        kReflection, kReflection);
+    if (items != null) {
+      _reflections = items;
+      return items;
+    }
     return await refreshReflections();
   }
 
@@ -124,6 +141,12 @@ class AppData {
 
   Future<List<Occasion>> getEvents() async {
     if (_occasions != null) return _occasions;
+    List<Occasion> items =
+        await _getFromHive<Occasion, List<Occasion>>(kOccasion, kOccasion);
+    if (items != null) {
+      _occasions = items;
+      return items;
+    }
     return await refreshEvents();
   }
 
@@ -151,6 +174,13 @@ class AppData {
 
   Future<List<News>> getNews() async {
     if (_news != null) return _news;
+    List<News> items = await _getFromHive<News, List<News>>(kNews, kNews);
+    print(items);
+    print(items.runtimeType);
+    if (items != null) {
+      _news = items;
+      return items;
+    }
     return await refreshNews();
   }
 
@@ -158,8 +188,7 @@ class AppData {
     try {
       var data = await _helper.getRequest('$kAppAPIUrl/news');
       _news = (data as List).map((datum) => News.fromJson(datum)).toList();
-      _persistItem<List<Deanery>>(_deaneries, kDeanery);
-      //_persistDeaneries(data);
+      _persistItem<List<News>>(_news, kNews);
       return _news;
     } catch (ex) {
       throw ApiFailureException(ex);
@@ -169,5 +198,11 @@ class AppData {
   Future<void> _persistItem<T>(T data, String name) async {
     await _hiveRepository.open(name);
     _hiveRepository.add<T>(name: name, key: name, item: data);
+  }
+
+  Future<TR> _getFromHive<T, TR>(String key, String name) async {
+    await _hiveRepository.open(key);
+    var item = _hiveRepository.get(key: key, name: name);
+    return item?.cast<T>()?.toList() ?? null;
   }
 }
