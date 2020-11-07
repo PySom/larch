@@ -15,7 +15,6 @@ class LoadingButton extends StatelessWidget {
   Widget _spinner(BuildContext context) {
     return CircularProgressIndicator(
       strokeWidth: 2,
-      backgroundColor: Colors.white,
       valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
     );
   }
@@ -23,6 +22,7 @@ class LoadingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
+      padding: EdgeInsets.symmetric(vertical: 15.0),
       color: kButtonColor,
       onPressed: () async {
         try {
@@ -36,15 +36,12 @@ class LoadingButton extends StatelessWidget {
           ).show(context);
         }
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14.0),
-        child: isLoading
-            ? _spinner(context)
-            : Text(
-                text,
-                style: TextStyle(color: Colors.white),
-              ),
-      ),
+      child: isLoading
+          ? _spinner(context)
+          : Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
     );
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lagosarchdiocese/helpers/background_image_container.dart';
 import 'package:lagosarchdiocese/helpers/layout.dart';
 import 'package:lagosarchdiocese/helpers/network_image_cache.dart';
-import 'package:lagosarchdiocese/helpers/padded_widget.dart';
 import 'package:lagosarchdiocese/helpers/static_layout.dart';
 import 'package:lagosarchdiocese/models/news.dart' as models;
 import 'package:lagosarchdiocese/providers/app_data_provider.dart';
@@ -80,24 +79,7 @@ class _NewsPageState extends State<NewsPage> {
       models.News firstNews = news.first;
       return [
         News(
-          child: SafeArea(
-            child: Padded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          HomePage.id, (Route<dynamic> route) => false);
-                    },
-                    child: Icon(Icons.arrow_back),
-                  ),
-                ],
-              ),
-            ),
-          ),
           subject: firstNews.title ?? '',
-          image: firstNews.image ?? '',
           content: firstNews.brief ?? '',
           stackedImages: [null, null, null],
           date: firstNews.datePosted != null
@@ -130,14 +112,35 @@ class _NewsPageState extends State<NewsPage> {
               });
             },
             builder: (context, news) {
-              return ListView(
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  Column(
-                    children: _children(news),
-                  ),
-                ],
+              return NewsScroll(
+                onNavBackTap: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      HomePage.id, (Route<dynamic> route) => false);
+                },
+                image: news?.first?.image,
+                children: _children(news),
               );
+              //   CustomScrollView(
+              //   //padding: EdgeInsets.zero,
+              //   slivers: <Widget>[
+              //     appSliverAppBar(
+              //       context,
+              //       imageUrl: news?.first?.image,
+              //       onTap: () {
+              //         Navigator.of(context).pushNamedAndRemoveUntil(
+              //             HomePage.id, (Route<dynamic> route) => false);
+              //       },
+              //     ),
+              //     SliverList(
+              //       delegate: SliverChildListDelegate(
+              //         _children(news),
+              //       ),
+              //     ),
+              //     // Column(
+              //     //   children: _children(news),
+              //     // ),
+              //   ],
+              // );
             }),
       ),
     );
@@ -145,10 +148,8 @@ class _NewsPageState extends State<NewsPage> {
 }
 
 class News extends StatelessWidget {
-  final String image;
   final String subject;
   final String content;
-  final Widget child;
   final List<String> stackedImages;
   final String date;
   final int likes;
@@ -160,20 +161,13 @@ class News extends StatelessWidget {
       this.shares,
       this.content,
       this.subject,
-      this.image,
       this.date,
-      this.child,
       this.stackedImages});
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        BackgroundImageContainer(
-          height: 350,
-          image: networkImageCache(url: '$kBaseUrl/$image'),
-          child: child,
-        ),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -367,4 +361,54 @@ class EffectItem extends StatelessWidget {
       ],
     );
   }
+}
+
+class NewsScroll extends StatelessWidget {
+  final Function onNavBackTap;
+  final String image;
+  final List<Widget> children;
+  NewsScroll({this.onNavBackTap, this.image, this.children});
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      //padding: EdgeInsets.zero,
+      slivers: <Widget>[
+        appSliverAppBar(
+          context,
+          background: BackgroundImageContainer(
+            color: kAccentColor,
+            image: networkImageCache(url: '$kBaseUrl/$image'),
+          ),
+          onTap: onNavBackTap,
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            children ?? [],
+          ),
+        ),
+        // Column(
+        //   children: _children(news),
+        // ),
+      ],
+    );
+  }
+}
+
+SliverAppBar appSliverAppBar(BuildContext context,
+    {Function onTap,
+    @required Widget background,
+    Widget leading,
+    double maxExtent}) {
+  return SliverAppBar(
+    leading: leading ??
+        GestureDetector(
+          onTap: onTap,
+          child: Icon(Icons.arrow_back),
+        ),
+    pinned: true,
+    expandedHeight: maxExtent ?? 350,
+    flexibleSpace: FlexibleSpaceBar(
+      background: background,
+    ),
+  );
 }

@@ -78,169 +78,187 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              BackgroundImageContainer(
-                padding: kHomeTopBgPadding,
-                image: AssetImage('${kImageUrl}larch_user_bg.jpg'),
-                child: SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        body: HomeScroll(
+          user: user,
+          onDrawerTap: () {
+            _scaffoldKey.currentState.openDrawer();
+          },
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      SizedBox(
-                        height: 10.0,
+                      RoundedBox(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(NewsPage.id);
+                        },
+                        boxChild: RoundedBoxChild(
+                          image: "images/newspaper.svg",
+                          title: "News",
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              _scaffoldKey.currentState.openDrawer();
-                            },
-                            child: Icon(Icons.dehaze),
-                          ),
-                        ],
+                      RoundedBox(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(Deanery.id);
+                        },
+                        boxChild: RoundedBoxChild(
+                          image: "images/church.svg",
+                          title: "Parishes",
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          CircleImage(
-                            url: user?.image,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Welcome back',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 3.0,
-                            width: double.infinity,
-                          ),
-                          Text(
-                            user?.fullName ?? 'Anonymous User',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
+                      RoundedBox(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(Reflection.id);
+                        },
+                        boxChild: RoundedBoxChild(
+                          image: "images/reflection.svg",
+                          title: "Reflections",
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      RoundedBox(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(EventPage.id);
+                        },
+                        boxChild: RoundedBoxChild(
+                          image: "images/events.svg",
+                          title: "Events",
+                        ),
+                      ),
+                      RoundedBox(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(DonationPage.id);
+                        },
+                        boxChild: RoundedBoxChild(
+                          image: "images/credit_card.svg",
+                          title: "Donations",
+                        ),
+                      ),
+                      RoundedBox(
+                        onTap: () {
+                          Auth.authProvider(context).isSignedIn()
+                              ? Navigator.of(context).pushNamed(Settings.id)
+                              : Navigator.of(context).pushNamed(LoginScreen.id);
+                        },
+                        boxChild: RoundedBoxChild(
+                          image: "images/settings.svg",
+                          title: "Settings",
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        RoundedBox(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(NewsPage.id);
-                          },
-                          boxChild: RoundedBoxChild(
-                            image: "images/newspaper.svg",
-                            title: "News",
-                          ),
-                        ),
-                        RoundedBox(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(Deanery.id);
-                          },
-                          boxChild: RoundedBoxChild(
-                            image: "images/church.svg",
-                            title: "Parishes",
-                          ),
-                        ),
-                        RoundedBox(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(Reflection.id);
-                          },
-                          boxChild: RoundedBoxChild(
-                            image: "images/reflection.svg",
-                            title: "Reflections",
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        RoundedBox(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(EventPage.id);
-                          },
-                          boxChild: RoundedBoxChild(
-                            image: "images/events.svg",
-                            title: "Events",
-                          ),
-                        ),
-                        RoundedBox(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(DonationPage.id);
-                          },
-                          boxChild: RoundedBoxChild(
-                            image: "images/credit_card.svg",
-                            title: "Donations",
-                          ),
-                        ),
-                        RoundedBox(
-                          onTap: () {
-                            Auth.authProvider(context).isSignedIn()
-                                ? Navigator.of(context).pushNamed(Settings.id)
-                                : Navigator.of(context)
-                                    .pushNamed(LoginScreen.id);
-                          },
-                          boxChild: RoundedBoxChild(
-                            image: "images/settings.svg",
-                            title: "Settings",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+            ),
+            BackgroundImageContainer(
+              height: 200.0,
+              width: double.infinity,
+              padding: EdgeInsets.all(16.0),
+              margin: EdgeInsets.only(
+                left: 20.0,
+                right: 20.0,
+                bottom: 20.0,
               ),
-              BackgroundImageContainer(
-                height: 200.0,
-                width: double.infinity,
-                padding: EdgeInsets.all(16.0),
-                margin: EdgeInsets.only(
-                  left: 20.0,
-                  right: 20.0,
-                  bottom: 20.0,
-                ),
-                image: AssetImage('${kImageUrl}church.jpg'),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Welcome to the Catholic Archdiocese of Lagos App",
-                      style: kParishLabelStyle,
-                    ),
-                  ],
-                ),
+              image: AssetImage('${kImageUrl}church.jpg'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Welcome to the Catholic Archdiocese of Lagos App",
+                    style: kParishLabelStyle,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class HomeScroll extends StatelessWidget {
+  final User user;
+  final List<Widget> children;
+  final Function onDrawerTap;
+
+  HomeScroll({this.children, this.user, this.onDrawerTap});
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      //padding: EdgeInsets.zero,
+      slivers: <Widget>[
+        appSliverAppBar(
+          context,
+          maxExtent: 220,
+          background: BackgroundImageContainer(
+            padding: kHomeTopBgPadding,
+            image: AssetImage('${kImageUrl}larch_user_bg.jpg'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircleImage(
+                      url: user?.image,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Welcome back',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3.0,
+                      width: double.infinity,
+                    ),
+                    Text(
+                      user?.fullName ?? 'Anonymous User',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          leading: GestureDetector(
+            onTap: onDrawerTap,
+            child: Icon(Icons.dehaze),
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            children ?? [],
+          ),
+        ),
+        // Column(
+        //   children: _children(news),
+        // ),
+      ],
     );
   }
 }
